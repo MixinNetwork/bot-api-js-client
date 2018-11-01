@@ -1,9 +1,13 @@
 {
   "name": "bot-api-js-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Javascript sdk for Mixin Network",
   "keywords": ["Mixin", "Mixin Network"],
   "main": "lib/mixin.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MixinNetwork/bot-api-js-client.git"
+  },
   "scripts": {
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib"
   },
