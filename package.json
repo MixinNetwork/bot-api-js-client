@@ -1,6 +1,6 @@
 {
   "name": "bot-api-js-client",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Javascript sdk for Mixin Network",
   "keywords": ["Mixin", "Mixin Network"],
   "main": "lib/mixin.js",
