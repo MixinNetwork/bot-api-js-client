@@ -5,5 +5,5 @@ This is a beta version of JS SDK for Mixin Network, contains `signAuthentication
 # Install
 
 ```
-npm i -S bot-api-js-client
+yarn add bot-api-js-client
 ```
