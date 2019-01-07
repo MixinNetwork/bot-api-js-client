@@ -9,7 +9,7 @@ function Mixin() {
 }
 
 Mixin.prototype = {
-  getSessionKeypair: function() {
+  generateSessionKeypair: function() {
     let keypair = forge.pki.rsa.generateKeyPair({bits: 1024, e: 0x10001});
     let body = forge.asn1.toDer(forge.pki.publicKeyToAsn1(keypair.publicKey)).getBytes();
     let public_key = forge.util.encode64(body, 64);
