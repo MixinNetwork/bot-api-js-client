@@ -64,10 +64,13 @@ Mixin.prototype = {
     }
     buf = Buffer.concat([buf, new Buffer(paddingArray)]);
 
-    let iv16  = crypto.randomBytes(16);
-    let cipher = crypto.createCipheriv('aes-256-cbc', this.hexToBytes(forge.util.binary.hex.encode(pinKey)), iv16);
-    cipher.setAutoPadding(false);
-    let encrypted_pin_buff = cipher.update(buf, 'utf-8');
+    let iv16 = forge.random.getBytesSync(16);
+    let key = this.hexToBytes(forge.util.binary.hex.encode(pinKey));
+    let cipher = forge.cipher.createCipher('AES-CBC', key);
+    cipher.start({iv: iv16});
+    cipher.update(buf)
+    cipher.finish();
+    let encrypted_pin_buff = cipher.output;
     encrypted_pin_buff = Buffer.concat([iv16 , encrypted_pin_buff]);
     return Buffer.from(encrypted_pin_buff).toString('base64');
   },
