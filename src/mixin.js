@@ -17,7 +17,7 @@ Mixin.prototype = {
     return {public: public_key, private: private_key}
   },
 
-  signAuthenticationToken: function (uid, sid, privateKey, method, uri, params) {
+  signAuthenticationToken: function (uid, sid, privateKey, method, uri, params, scp) {
     if (typeof(params) === "object") {
       params = JSON.stringify(params);
     } else {
@@ -33,7 +33,8 @@ Mixin.prototype = {
       iat: moment.utc().unix() ,
       exp: expire,
       jti: uuid(),
-      sig: md.digest().toHex()
+      sig: md.digest().toHex(),
+      scp: scp
     };
     return jwt.sign(payload, privateKey, { algorithm: 'RS512'});
   },
