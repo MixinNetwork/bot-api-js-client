@@ -20,13 +20,13 @@ Mixin.prototype = {
   signAuthenticationToken: function (uid, sid, privateKey, method, uri, params, scp) {
     if (typeof(params) === "object") {
       params = JSON.stringify(params);
-    } else {
+    } else if (typeof(params) !== "string") {
       params = ""
     }
 
     let expire = moment.utc().add(30, 'minutes').unix();
     let md = forge.md.sha256.create();
-    md.update(method + uri + params);
+    md.update(forge.util.encodeUtf8(method + uri + params));
     let payload = {
       uid: uid,
       sid: sid,
