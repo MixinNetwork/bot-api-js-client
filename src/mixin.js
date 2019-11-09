@@ -82,6 +82,20 @@ Mixin.prototype = {
       bytes.push(parseInt(hex.substr(c, 2), 16));
     }
     return bytes;
+  },
+
+  conversationId: function() {
+    let ctx;
+    switch (this.environment()) {
+      case 'iOS':
+        ctx = prompt('MixinContext.getContext()');
+        return JSON.parse(ctx).conversation_id;
+      case 'Android':
+        ctx = window.MixinContext.getContext();
+        return JSON.parse(ctx).conversation_id;
+      default:
+        return undefined;
+    }
   }
 };
 
