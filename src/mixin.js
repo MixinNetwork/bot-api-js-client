@@ -10,11 +10,11 @@ function Mixin() {
 
 Mixin.prototype = {
   generateSessionKeypair: function () {
-    let keypair = forge.pki.rsa.generateKeyPair({ bits: 2048, e: 0x10001 });
+    let keypair = forge.pki.rsa.generateKeyPair({bits: 2048, e: 0x10001});
     let body = forge.asn1.toDer(forge.pki.publicKeyToAsn1(keypair.publicKey)).getBytes();
     let public_key = forge.util.encode64(body, 64);
     let private_key = forge.pki.privateKeyToPem(keypair.privateKey);
-    return { public: public_key, private: private_key }
+    return {public: public_key, private: private_key}
   },
 
   signAuthenticationToken: function (uid, sid, privateKey, method, uri, params, scp) {
@@ -36,7 +36,7 @@ Mixin.prototype = {
       sig: md.digest().toHex(),
       scp: scp
     };
-    return jwt.sign(payload, privateKey, { algorithm: 'RS512' });
+    return jwt.sign(payload, privateKey, {algorithm: 'RS512'});
   },
 
   signEncryptedPin: function (pin, pinToken, sessionId, privateKey, iterator) {
@@ -68,7 +68,7 @@ Mixin.prototype = {
     let iv16 = forge.random.getBytesSync(16);
     let key = this.hexToBytes(forge.util.binary.hex.encode(pinKey));
     let cipher = forge.cipher.createCipher('AES-CBC', key);
-    cipher.start({ iv: iv16 });
+    cipher.start({iv: iv16});
     cipher.update(buf)
     cipher.finish();
     let encrypted_pin_buff = cipher.output;
@@ -84,7 +84,17 @@ Mixin.prototype = {
     return bytes;
   },
 
-  conversationId: function() {
+  environment: function () {
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
+      return 'iOS';
+    }
+    if (window.MixinContext && window.MixinContext.getContext) {
+      return 'Android';
+    }
+    return undefined;
+  },
+
+  conversationId: function () {
     let ctx;
     switch (this.environment()) {
       case 'iOS':
