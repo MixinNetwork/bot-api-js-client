@@ -86,25 +86,39 @@ Mixin.prototype = {
 
   environment: function () {
     if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
-      return 'iOS';
+      return 'iOS'
     }
     if (window.MixinContext && window.MixinContext.getContext) {
-      return 'Android';
+      return 'Android'
     }
-    return undefined;
+    return undefined
   },
 
-  conversationId: function () {
+  getMixinContext: function () {
     let ctx;
     switch (this.environment()) {
       case 'iOS':
-        ctx = prompt('MixinContext.getContext()');
-        return JSON.parse(ctx).conversation_id;
+        ctx = prompt('MixinContext.getContext()')
+        return JSON.parse(ctx)
       case 'Android':
-        ctx = window.MixinContext.getContext();
-        return JSON.parse(ctx).conversation_id;
+        ctx = window.MixinContext.getContext()
+        return JSON.parse(ctx)
       default:
-        return undefined;
+        return undefined
+    }
+  },
+
+  conversationId: function () {
+    const ctx = this.getMixinContext()
+    if (ctx) {
+      return ctx.conversation_id
+    }
+  },
+
+  reloadTheme: function () {
+    const ctx = this.getMixinContext()
+    if (ctx) {
+      ctx.reloadTheme()
     }
   }
 };
