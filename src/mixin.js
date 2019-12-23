@@ -116,9 +116,13 @@ Mixin.prototype = {
   },
 
   reloadTheme: function () {
-    const ctx = this.getMixinContext()
-    if (ctx) {
-      ctx.reloadTheme()
+    switch (this.environment()) {
+      case 'iOS':
+        window.webkit.messageHandlers.reloadTheme.postMessage('');
+        return
+      case 'Android':
+        window.MixinContext.reloadTheme()
+        return
     }
   }
 };
