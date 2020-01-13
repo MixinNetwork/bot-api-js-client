@@ -10,11 +10,11 @@ function Mixin() {
 
 Mixin.prototype = {
   generateSessionKeypair: function () {
-    let keypair = forge.pki.rsa.generateKeyPair({bits: 2048, e: 0x10001});
+    let keypair = forge.pki.rsa.generateKeyPair({ bits: 2048, e: 0x10001 });
     let body = forge.asn1.toDer(forge.pki.publicKeyToAsn1(keypair.publicKey)).getBytes();
     let public_key = forge.util.encode64(body, 64);
     let private_key = forge.pki.privateKeyToPem(keypair.privateKey);
-    return {public: public_key, private: private_key}
+    return { public: public_key, private: private_key }
   },
 
   signAuthenticationToken: function (uid, sid, privateKey, method, uri, params, scp) {
@@ -36,7 +36,7 @@ Mixin.prototype = {
       sig: md.digest().toHex(),
       scp: scp
     };
-    return jwt.sign(payload, privateKey, {algorithm: 'RS512'});
+    return jwt.sign(payload, privateKey, { algorithm: 'RS512' });
   },
 
   signEncryptedPin: function (pin, pinToken, sessionId, privateKey, iterator) {
@@ -68,7 +68,7 @@ Mixin.prototype = {
     let iv16 = forge.random.getBytesSync(16);
     let key = this.hexToBytes(forge.util.binary.hex.encode(pinKey));
     let cipher = forge.cipher.createCipher('AES-CBC', key);
-    cipher.start({iv: iv16});
+    cipher.start({ iv: iv16 });
     cipher.update(buf)
     cipher.finish();
     let encrypted_pin_buff = cipher.output;
@@ -101,7 +101,7 @@ Mixin.prototype = {
         ctx = prompt('MixinContext.getContext()')
         return JSON.parse(ctx)
       case 'Android':
-        ctx = window.MixinContext.getContext()
+        ctx = window.MixinContext && (typeof window.MixinContext.getContext === 'function') && window.MixinContext.getContext()
         return JSON.parse(ctx)
       default:
         return undefined
@@ -118,10 +118,10 @@ Mixin.prototype = {
   reloadTheme: function () {
     switch (this.environment()) {
       case 'iOS':
-        window.webkit.messageHandlers.reloadTheme.postMessage('');
+        window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.reloadTheme && window.webkit.messageHandlers.reloadTheme.postMessage('');
         return
       case 'Android':
-        window.MixinContext.reloadTheme()
+        window.MixinContext && (typeof window.MixinContext.reloadTheme === 'function') && window.MixinContext.reloadTheme()
         return
     }
   }
