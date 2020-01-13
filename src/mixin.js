@@ -118,7 +118,7 @@ Mixin.prototype = {
   reloadTheme: function () {
     switch (this.environment()) {
       case 'iOS':
-        window.webkit.messageHandlers.reloadTheme.postMessage('');
+        window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.reloadTheme && window.webkit.messageHandlers.reloadTheme.postMessage('');
         return
       case 'Android':
         window.MixinContext.reloadTheme()
