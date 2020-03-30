@@ -85,34 +85,25 @@ Mixin.prototype = {
   },
 
   environment: function () {
-    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
-      return 'iOS'
-    }
-    if (window.MixinContext && window.MixinContext.getContext) {
-      return 'Android'
-    }
-    return undefined
+    const ctx = this.getMixinContext()
+    return ctx.platform
   },
 
   getMixinContext: function () {
-    let ctx;
-    switch (this.environment()) {
-      case 'iOS':
-        ctx = prompt('MixinContext.getContext()')
-        return JSON.parse(ctx)
-      case 'Android':
-        ctx = window.MixinContext && (typeof window.MixinContext.getContext === 'function') && window.MixinContext.getContext()
-        return JSON.parse(ctx)
-      default:
-        return undefined
+    let ctx = {};
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
+      ctx = JSON.parse(prompt('MixinContext.getContext()'))
+      ctx.platform = ctx.platform || 'iOS'
+    } else if (window.MixinContext && (typeof window.MixinContext.getContext === 'function')) {
+      ctx = JSON.parse(window.MixinContext.getContext())
+      ctx.platform = ctx.platform || 'Android'
     }
+    return ctx
   },
 
   conversationId: function () {
     const ctx = this.getMixinContext()
-    if (ctx) {
-      return ctx.conversation_id
-    }
+    return ctx.conversation_id
   },
 
   reloadTheme: function () {
@@ -121,6 +112,7 @@ Mixin.prototype = {
         window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.reloadTheme && window.webkit.messageHandlers.reloadTheme.postMessage('');
         return
       case 'Android':
+      case 'Desktop':
         window.MixinContext && (typeof window.MixinContext.reloadTheme === 'function') && window.MixinContext.reloadTheme()
         return
     }
