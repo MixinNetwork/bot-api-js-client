@@ -1,7 +1,7 @@
 import forge from 'node-forge';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
-import uuid from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import LittleEndian from "int64-buffer";
 import crypto from 'crypto';
 
@@ -32,7 +32,7 @@ Mixin.prototype = {
       sid: sid,
       iat: moment.utc().unix(),
       exp: expire,
-      jti: uuid(),
+      jti: uuidv4(),
       sig: md.digest().toHex(),
       scp: scp
     };
