@@ -1,6 +1,7 @@
 import forge from 'node-forge'
 import moment from 'moment'
 import jwt from 'jsonwebtoken'
+import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import LittleEndian from 'int64-buffer'
 
@@ -32,7 +33,7 @@ class Mixin {
       exp: expire,
       jti: uuidv4(),
       sig: md.digest().toHex(),
-      scp: scp,
+      scp: scp || 'FULL',
     }
     if (process.browser)
       return KJUR.jws.JWS.sign(
@@ -44,13 +45,13 @@ class Mixin {
     return jwt.sign(payload, privateKey, { algorithm: 'RS512' })
   }
 
-  signEncryptedPin(pin, pinToken, sessionId, privateKey, iterator) {
+  encryptPin(pin, pinToken, sessionId, privateKey, iterator) {
     const blockSize = 16
     let Uint64
 
     try {
-      if (LittleEndian) Uint64 = LittleEndian.Int64BE
-      if (Uint64BE) Uint64 = Uint64BE
+      if (LittleEndian) Uint64 = LittleEndian.Int64LE
+      if (Uint64BE) Uint64 = Uint64LE
     } catch (error) {}
 
     privateKey = forge.pki.privateKeyFromPem(privateKey)
@@ -59,14 +60,12 @@ class Mixin {
       label: sessionId,
     })
 
-    let _iterator = new Uint8Array(
-      new Uint64(moment.utc().unix() * 1000000000).buffer
-    )
+    let _iterator = new Uint8Array(new Uint64(moment.utc().unix()).buffer)
     _iterator = forge.util.createBuffer(_iterator)
-    iterator = iterator || _iterator.getBytes()
-    let time = new Uint8Array(
-      new Uint64(moment.utc().unix() * 1000000000).buffer
-    )
+    iterator = iterator || _iterator
+    iterator = iterator.getBytes()
+    let time = new Uint8Array(new Uint64(moment.utc().unix()).buffer)
+
     time = forge.util.createBuffer(time)
     time = time.getBytes()
 
@@ -85,22 +84,123 @@ class Mixin {
     }
 
     let iv = forge.random.getBytesSync(16)
-    let cipher = forge.cipher.createCipher('AES-CBC', pinKey)
+    let key = this.hexToBytes(forge.util.binary.hex.encode(pinKey))
+    let cipher = forge.cipher.createCipher('AES-CBC', key)
+
     cipher.start({
       iv: iv,
     })
     cipher.update(buffer)
-    cipher.finish()
 
-    return forge.util.encode64(cipher.output.getBytes())
+    cipher.finish(() => true)
+
+    let pin_buff = forge.util.createBuffer()
+    pin_buff.putBytes(iv)
+    pin_buff.putBytes(cipher.output.getBytes())
+
+    const encryptedBytes = pin_buff.getBytes()
+    return forge.util.encode64(encryptedBytes)
   }
 
   hexToBytes(hex) {
-    var bytes = []
+    const bytes = []
     for (let c = 0; c < hex.length; c += 2) {
       bytes.push(parseInt(hex.substr(c, 2), 16))
     }
     return bytes
+  }
+
+  request(uid, sid, sessionKey, method, path, data, callback) {
+    const accessToken = this.signAuthenticationToken(
+      uid,
+      sid,
+      sessionKey,
+      method,
+      path,
+      JSON.stringify(data)
+    )
+    return axios({
+      method,
+      url: 'https://mixin-api.zeromesh.net' + path,
+      data,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + accessToken,
+      },
+    }).then((res) => {
+      if (callback) {
+        callback(res.data)
+      } else {
+        return res.data
+      }
+    })
+  }
+
+  createUser(fullName, uid, sid, mainPrivateKey, callback) {
+    const keyPair = this.generateSessionKeypair()
+
+    const publicKey = keyPair.public
+    const privateKey = keyPair.private
+
+    if (publicKey.indexOf('-----') !== -1) {
+      publicKey = publicKey.split('-----')[2].replace(/\r?\n|\r/g, '')
+    }
+
+    let sessionSecret = publicKey
+    let sessionKey = privateKey
+
+    const data = {
+      session_secret: sessionSecret,
+      full_name: fullName,
+    }
+    return this.request(uid, sid, mainPrivateKey, 'POST', '/users', data).then(
+      (res) => {
+        const user = res.data
+        const userData = {
+          user,
+          sessionKey,
+        }
+        if (callback) {
+          callback(userData)
+        } else {
+          return userData
+        }
+      }
+    )
+  }
+
+  updatePin(oldEncryptedPin, encryptedPin, uid, sid, sessionKey, callback) {
+    const data = {
+      old_pin: oldEncryptedPin,
+      pin: encryptedPin,
+    }
+    return this.request(uid, sid, sessionKey, 'POST', '/pin/update', data).then(
+      (res) => {
+        if (callback) {
+          callback(res.data)
+        } else {
+          return res.data
+        }
+      }
+    )
+  }
+
+  setupPin(pin, user, sessionKey, callback) {
+    const encryptedPIN = this.encryptPin(
+      pin,
+      user.pin_token,
+      user.session_id,
+      sessionKey
+    )
+
+    return this.updatePin(
+      '',
+      encryptedPIN,
+      user.user_id,
+      user.session_id,
+      sessionKey,
+      callback
+    )
   }
 
   environment() {

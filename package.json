@@ -22,6 +22,7 @@
   "author": "jadeydi",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "int64-buffer": "^0.99.1007",
     "jsonwebtoken": "^8.5.0",
     "moment": "^2.24.0",

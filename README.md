@@ -9,6 +9,10 @@ yarn add bot-api-js-client
 ```
 
 ## Example
+```
+https://developers.mixin.one/
+```
+Create your mixin application and fill in the configuration first.
 
 ### Node.js
 
