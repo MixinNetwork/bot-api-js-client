@@ -3,7 +3,7 @@ import moment from 'moment';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import LittleEndian from "int64-buffer";
-import crypto from 'crypto';
+import base64url from 'base64url';
 
 function Mixin() {
 }
@@ -15,6 +15,11 @@ Mixin.prototype = {
     let public_key = forge.util.encode64(body, 64);
     let private_key = forge.pki.privateKeyToPem(keypair.privateKey);
     return { public: public_key, private: private_key }
+  },
+
+  generateEdDSASessionKeypair: function () {
+    let keypair = forge.pki.ed25519.generateKeyPair();
+    return { public: keypair.publicKey, private: keypair.privateKey }
   },
 
   signAuthenticationToken: function (uid, sid, privateKey, method, uri, params, scp) {
@@ -37,6 +42,45 @@ Mixin.prototype = {
       scp: scp
     };
     return jwt.sign(payload, privateKey, { algorithm: 'RS512' });
+  },
+
+  signEdDSAAuthenticationToken: function (uid, sid, privateKey, method, uri, params, scp) {
+    if (typeof (params) === "object") {
+      params = JSON.stringify(params);
+    } else if (typeof (params) !== "string") {
+      params = ""
+    }
+
+    let expire = moment.utc().add(30, 'minutes').unix();
+    let md = forge.md.sha256.create();
+    md.update(forge.util.encodeUtf8(method + uri + params));
+    const jwtPayload = {
+      uid: uid,
+      sid: sid,
+      iat: moment.utc().unix(),
+      exp: expire,
+      jti: uuidv4(),
+      sig: md.digest().toHex(),
+      scp: scp
+    };
+
+    const jwtHeader = {
+      alg: 'EdDSA',
+      typ: 'JWT'
+    }
+    
+    const jwtBody = base64url.encode(JSON.stringify(jwtHeader)) + '.' + base64url.encode(JSON.stringify(jwtPayload))
+
+    const jwtSignature = forge.pki.ed25519.sign({
+      message: jwtBody,
+      encoding: 'utf8',
+      privateKey: privateKey
+    });
+
+    const signedJwt = jwtBody + '.' + base64url.encode(jwtSignature)
+
+    return signedJwt
+
   },
 
   signEncryptedPin: function (pin, pinToken, sessionId, privateKey, iterator) {
