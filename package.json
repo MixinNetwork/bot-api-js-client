@@ -12,7 +12,7 @@
     "url": "git+https://github.com/MixinNetwork/bot-api-js-client.git"
   },
   "scripts": {
-    "prepublish": "node_modules/@babel/cli/bin/babel.js src --out-dir lib"
+    "prepublish": "rollup -c > lib/mixin.js && BROWSER=true rollup -c > lib/mixin.browser.js"
   },
   "babel": {
     "presets": [
@@ -22,7 +22,7 @@
   "author": "jadeydi",
   "license": "ISC",
   "dependencies": {
-    "crypto": "^1.0.1",
+    "axios": "^0.19.2",
     "int64-buffer": "^0.99.1007",
     "jsonwebtoken": "^8.5.0",
     "moment": "^2.24.0",
@@ -30,8 +30,11 @@
     "uuid": "^7.0.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.0",
-    "@babel/core": "^7.7.2",
-    "@babel/preset-env": "^7.7.0"
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "rollup": "^2.7.6",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-uglify": "^6.0.4"
   }
 }
