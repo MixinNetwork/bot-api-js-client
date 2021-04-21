@@ -1,11 +1,12 @@
-const Mixin = require('../../lib/mixin')
-
-const bot = new Mixin()
+const bot = require('../../lib/mixin')
 
 const clientId = ''
 const sessionId = ''
 const privateKey = ''
 
+console.log(bot.util.challenge())
+
+/*
 // create user
 bot.createUser('username', clientId, sessionId, privateKey).then((userData) => {
   console.log('create user', userData)
@@ -14,3 +15,4 @@ bot.createUser('username', clientId, sessionId, privateKey).then((userData) => {
     console.log('setup pin', setupData)
   })
 })
+*/
