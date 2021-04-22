@@ -4,7 +4,7 @@ const clientId = ''
 const sessionId = ''
 const privateKey = ''
 
-console.log(bot.util.challenge())
+console.log(bot.util.hashMembers(["e95b1d4e-4d49-4ac3-9402-988804458adc", "e9e5b807-fa8b-455a-8dfa-b189d28310ff"]))
 
 /*
 // create user

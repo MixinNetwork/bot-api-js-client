@@ -1,4 +1,5 @@
 import forge from 'node-forge'
+import jsSHA from 'jssha';
 
 class Util {
   environment() {
@@ -38,6 +39,13 @@ class Util {
 
   base64RawURLEncode(buffer) {
     return forge.util.encode64(buffer).replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  }
+
+  hashMembers(ids) {
+    let key = ids.sort().join('');
+    let shaObj = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' })
+    shaObj.update(key);
+    return shaObj.getHash('HEX')
   }
 }
 
