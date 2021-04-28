@@ -1,5 +1,4 @@
 import forge from 'node-forge'
-import moment from 'moment'
 import LittleEndian from 'int64-buffer'
 
 import Client from './client'
@@ -34,11 +33,11 @@ class User {
       label: sessionId,
     })
 
-    let _iterator = new Uint8Array(new Uint64(moment.utc().unix()).buffer)
+    let _iterator = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer)
     _iterator = forge.util.createBuffer(_iterator)
     iterator = iterator || _iterator
     iterator = iterator.getBytes()
-    let time = new Uint8Array(new Uint64(moment.utc().unix()).buffer)
+    let time = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer)
 
     time = forge.util.createBuffer(time)
     time = time.getBytes()
