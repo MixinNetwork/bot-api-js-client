@@ -64,12 +64,6 @@ class Client {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + accessToken,
       },
-    }).then((resp) => {
-      if (callback) {
-        callback(resp.data)
-      } else {
-        return resp.data
-      }
     })
   }
 }
