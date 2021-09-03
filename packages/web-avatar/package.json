@@ -9,6 +9,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MixinNetwork/bot-api-js-client.git"
@@ -24,5 +27,6 @@
   },
   "devDependencies": {
     "webpack": "^5.51.2"
-  }
+  },
+  "gitHead": "3d8d5d8d61b2aa8d7d0334daf34834f74d557cab"
 }
