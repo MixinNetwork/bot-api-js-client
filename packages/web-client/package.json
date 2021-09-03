@@ -1,6 +1,6 @@
 {
   "name": "@mixin.dev/web-client",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "mixin web client",
   "keywords": [
     "mixin",
@@ -15,6 +15,9 @@
     "lib": "lib",
     "test": "__tests__"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "lib"
   ],
@@ -27,6 +30,5 @@
   },
   "bugs": {
     "url": "https://github.com/MixinNetwork/bot-api-js-client/issues"
-  },
-  "gitHead": "91c0683c42f73364b57f62d79c16dad443bb4679"
+  }
 }
