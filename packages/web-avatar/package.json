@@ -5,7 +5,7 @@
   "author": "neo <her_liu@qq.com>",
   "homepage": "https://github.com/MixinNetwork/bot-api-js-client/packages/web-avatar/README.md",
   "license": "ISC",
-  "main": "dist/mixin-avatar.js",
+  "main": "lib/index.js",
   "files": [
     "lib"
   ],

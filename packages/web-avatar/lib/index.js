@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js'
+const BigNumber = require('bignumber.js')
 
 const AvatarColors = [
   '#FFD659',
@@ -33,13 +33,15 @@ const AvatarColors = [
   '#C097D9'
 ]
 
+module.exports = getAvatarColorById
+
 /**
  * Get the background color of the user's avatar according to user_id
  * 根据 user_id 获取用户头像的背景色
  * @param user_id user_id
  * @returns color 如 #C097D9 
  */
-export default function getAvatarColorById(user_id) {
+function getAvatarColorById(user_id) {
   let result = typeof BigInt === 'function' ? uuidHashCode(user_id) : ios(user_id)
   return AvatarColors[result % AvatarColors.length]
 }
