@@ -1,5 +1,5 @@
 
-interface Context {
+export interface MixinContext {
   currency: string
   immersive: boolean
   appearance: 'light' | 'dark'
@@ -13,10 +13,10 @@ interface Context {
  * @description 获取当前页面的环境是否为 Mixin 的环境
  * 如果不是，则返回 undefined
  * 如果是，则返回相应的 Context 信息
- * @returns {Context | undefined}
+ * @returns {MixinContext | undefined}
  */
 export const getContext = () => {
-  let ctx: Context | undefined
+  let ctx: MixinContext | undefined
   if (
     window.webkit &&
     window.webkit.messageHandlers &&
@@ -132,7 +132,7 @@ export const checkMixinVersionBiggerThanTarget = (targetVersion: string): boolea
 export const audiosPlayList = (audios: string[]) => {
   switch (enviroment()) {
     case 'iOS':
-      return window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.playlist && window.webkit.messageHandlers.playlist.postMessage(audios);
+      return window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.playlist && window.webkit.messageHandlers.playlist.postMessage(audios)
     case 'Android':
     case 'Desktop':
       return window.MixinContext && (typeof window.MixinContext.playlist === 'function') && window.MixinContext.playlist(audios)

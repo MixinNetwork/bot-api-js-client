@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "outDir": "./src/",
     "sourceMap": false,
     "noImplicitAny": false,
-    "module": "es6",
+    "module": "CommonJS",
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "Node"
