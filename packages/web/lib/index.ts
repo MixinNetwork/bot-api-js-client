@@ -1,6 +1,11 @@
 import * as browserObj from './browser'
+import { Client } from './client'
 import * as schemaObj from './schema'
-export const Mixin = { ...browserObj, ...schemaObj }
+import * as networkObj from './network'
+export const Mixin = {
+  ...browserObj,
+  ...schemaObj,
+  ...networkObj,
+  Client
+}
 export default Mixin
-
-

@@ -4,7 +4,7 @@ function genConfig(name) {
   const isWeb = name.includes('browser')
   return {
     mode: "production",
-    entry: isWeb ? './src/lib/index.js' : './src/lib/cmd.js',
+    entry: isWeb ? './lib/index.ts' : './lib/cmd.ts',
     target: isWeb ? 'web' : 'node',
     module: {
       rules: [

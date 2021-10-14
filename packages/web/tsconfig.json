@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
-    "outDir": "./src/",
+    "rootDirs": [
+      "./lib"
+    ],
+    "outDir": "./dist",
     "sourceMap": false,
     "noImplicitAny": false,
     "module": "CommonJS",
+    "declaration": true,
+    "declarationDir": "./dist",
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "Node"
-  }
+  },
+  "include": [
+    "./lib/*"
+  ]
 }

@@ -1,37 +1,36 @@
-import { AxiosInstance } from "axios"
 import { request } from "./http"
-
+import { Asset, Conversation, NetworkTicker, Snapshot, SnapshotQuery, Transaction, User } from "../types"
 export class Client {
-  request: AxiosInstance
+  request: (string) => Promise<any>
   constructor(token: string) {
     this.request = request(token)
   }
 
-  readAssets() {
-    return this.request.get("/assets")
+  readAssets(): Promise<Asset[]> {
+    return this.request("/assets")
   }
 
-  readAsset(id: string) {
-    return this.request.get(`/assets/${id}`)
+  readAsset(id: string): Promise<Asset> {
+    return this.request(`/assets/${id}`)
   }
 
-  readFriends() {
-    return this.request.get("/friends")
+  readFriends(): Promise<User[]> {
+    return this.request("/friends")
   }
 
-  readBlockingUser() {
-    return this.request.get("/blocking_users")
+  readBlockingUser(): Promise<User[]> {
+    return this.request("/blocking_users")
   }
 
-  readSnapshots() {
-    return this.request.get("/snapshots")
+  readSnapshots(): Promise<Snapshot[]> {
+    return this.request("/snapshots")
   }
 
-  readSnapshot(id: string) {
-    return this.request.get(`/snapshots/${id}`)
+  readSnapshot(id: string): Promise<Snapshot> {
+    return this.request(`/snapshots/${id}`)
   }
 
-  readConversation(id: string) {
-    return this.request.get(`/conversations/${id}`)
+  readConversation(id: string): Promise<Conversation> {
+    return this.request(`/conversations/${id}`)
   }
 }
