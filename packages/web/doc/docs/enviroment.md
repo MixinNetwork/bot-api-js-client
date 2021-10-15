@@ -1,0 +1,66 @@
+---
+sidebar_position: 2
+---
+
+# Mixin 环境
+Mixin 客户端为 web view 注入了一些环境变量，和一些 schema，来于原生客户端进行交互。
+
+
+### 1. 获取 Mixin 环境变量
+```js
+Mixin.getContext()
+// {
+//   currency: string // 当前用户的货币种类
+//   immersive: boolean // 当前页面是否开启了 沉浸式
+//   appearance: 'light' | 'dark' // 客户端的显示模式
+//   platform: '' | 'Android' | 'iOS' | 'Desktop' // 客户端的平台
+//   conversation_id: string // 当前会话id
+//   app_version: string // 客户端版本
+//   locale: string // 客户端语言
+// }
+```
+> 如果是非 mixin 环境，则返回 undefined
+
+### 2. 获取当前页面的设备
+```js
+Mixin.enviroment() // '' | 'iOS' | 'Android' | 'Desktop'
+```
+
+### 3. 判断当前页面是否开启了沉浸式
+```js
+Mixin.isImmersive() // true | false
+```
+
+### 4. 获取 Mixin 版本
+```js
+Mixin.getMixinVersion() // 0.31.0
+```
+> 如果是非 mixin 环境，则返回空字符串
+
+### 5. 获取当前会话的 conversation_id
+```js
+Mixin.getConversationID() // 'uuid'
+```
+> 如果是非 mixin 环境，则返回空字符串
+
+### 6. 获取当前主题色值
+```js
+Mixin.getTheme() // #ffffff
+```
+> 其实就是 name=theme-color 的 meta 标签里 content 值
+
+### 7. 修改当前页面的主题色(手机顶部状态栏的颜色)
+```js
+Mixin.changeTheme('#ff0000')
+```
+
+### 8. 唤起原生的语音播放器
+```js
+mixin.audiosPlayList([
+  'https://xxx.mp3',
+  'https://xxx.mp3',
+  'https://xxx.mp3'
+])
+```
+> 支持多个 mp3 文件的播放，顺序播放。
+

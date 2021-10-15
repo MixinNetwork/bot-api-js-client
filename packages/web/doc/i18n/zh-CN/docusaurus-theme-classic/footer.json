@@ -1,0 +1,26 @@
+{
+  "link.title.Docs": {
+    "message": "Docs",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Community": {
+    "message": "Community",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.item.label.Tutorial": {
+    "message": "Tutorial",
+    "description": "The label of footer link with label=Tutorial linking to /docs/intro"
+  },
+  "link.item.label.Mixin Developers": {
+    "message": "Mixin Developers",
+    "description": "The label of footer link with label=Mixin Developers linking to https://developers.mixin.one"
+  },
+  "link.item.label.Mixin HomePage": {
+    "message": "Mixin HomePage",
+    "description": "The label of footer link with label=Mixin HomePage linking to https://mixin.one"
+  },
+  "copyright": {
+    "message": "Copyright © 2021 Mixin, Inc.",
+    "description": "The footer copyright"
+  }
+}

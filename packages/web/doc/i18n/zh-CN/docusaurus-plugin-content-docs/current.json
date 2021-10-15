@@ -1,0 +1,14 @@
+{
+  "version.label": {
+    "message": "下一篇",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Basics": {
+    "message": "介绍",
+    "description": "The label for category Tutorial - Basics in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Tutorial - Extras": {
+    "message": "介绍 - 补充",
+    "description": "The label for category Tutorial - Extras in sidebar tutorialSidebar"
+  }
+}

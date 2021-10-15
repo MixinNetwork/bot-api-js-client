@@ -1,22 +1,24 @@
-const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one']
-function stringify(obj: Object) {
-  let str = ""
-  for (var k in obj)
-    str += `${k}=${unescape(obj[k])}&`
-  return str.slice(0, -1)
-};
+import { queryStringify } from './utils'
 
-export const request = (token?: string): (url: string, params?: Object) => Promise<any> => {
-  return async (url: string, parmas: any = {}) => {
-    const p = stringify(parmas)
-    const res = await fetch(hostURL[0] + url + '?' + p, {
+const hostURL = ['https://mixin-api.zeromesh.net', 'https://api.mixin.one']
+export const request = (token?: string): (url: string, params?: Object, method?: string, data?: Object) => Promise<any> => {
+  return async (url: string, parmas: any = {}, method = 'get', data: any = {}) => {
+    const p = queryStringify(parmas)
+    const resp = await fetch(hostURL[0] + url + '?' + p, {
+      method,
+      body: JSON.stringify(data),
       headers: new Headers({
         "Content-Type": "application/json",
         "Authorization": token ? `Bearer ${token}` : ""
       })
     })
-    const data = await res.json()
-    return data.data || data.error
+    const res = await resp.json()
+    return res.data || res.error
   }
 }
 export const mixinRequest = request("")
+
+export const mixinSchema = (url: string, params: Object | string = "") => {
+  if (typeof params === 'object') params = queryStringify(params)
+  window.open(`mixin://${url}?${params}`)
+}

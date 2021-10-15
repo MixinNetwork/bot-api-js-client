@@ -15,7 +15,7 @@ export interface MixinContext {
  * 如果是，则返回相应的 Context 信息
  * @returns {MixinContext | undefined}
  */
-export const getContext = () => {
+export const getContext = (): MixinContext | undefined => {
   let ctx: MixinContext | undefined
   if (
     window.webkit &&
@@ -40,7 +40,7 @@ export const getContext = () => {
  * 如果是的话，会返回相应的环境变量
  * @returns {string} '' or 'iOS' or 'Android' or 'Desktop'
  */
-export const enviroment = () => getContext()?.platform || ''
+export const enviroment = (): string => getContext()?.platform || ''
 
 /**
  * @description 检查当前页面是否开启了沉浸式模式，
@@ -48,7 +48,7 @@ export const enviroment = () => getContext()?.platform || ''
  * 如果期望在非 mixin 环境下自定义一些样式，可以使用此方法
  * @returns {boolean}
  */
-export const isImmersive = () => getContext()?.immersive || false
+export const isImmersive = (): boolean => getContext()?.immersive || false
 
 /**
  * @description 获取当前客户端的版本号
@@ -62,8 +62,9 @@ let reg = /Mixin\/([0-9]+)\.([0-9]+)\.([0-9]+)/
  * @description 获取当前客户端 Mixin 的版本号
  * @returns 版本号 如： 0.31.1
  */
-export const getMixinVersion = () => {
+export const getMixinVersion = (): string => {
   const [_, a, b, c] = navigator.userAgent.match(reg) || []
+  if (!a && !b && !c) return ''
   return [a, b, c].join('.')
 }
 

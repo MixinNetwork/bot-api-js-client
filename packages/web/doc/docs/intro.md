@@ -1,0 +1,40 @@
+---
+sidebar_position: 1
+---
+
+# 简介
+用于 web 端的 mixin sdk。
+- 体积小：体积只有 12k
+- 支持全：ts 支持，各种类型友好
+
+> ⚠️注意：只能在浏览器环境使用，不能在 node 环境使用，如果需要 node 环境，请 [点击这里](https://github.com/MixinNetwork/bot-api-nodejs-client)
+
+## 安装
+
+### 1. 通过 npm 引入
+```shell
+npm install @mixin.dev/web
+```
+
+### 2. 通过 cdn 引入
+```html
+<script src="https://newbie.zeromesh.net/web.browser.min.js"></script>
+```
+## 快速上手
+### 1. 通过 npm 引入
+```js
+import { Mixin } from '@mixin.dev/web'
+// 获取 Mixin 网络内资产排名前 100 的资产
+console.log(Mixin)
+Mixin.readNetworkAssetsTop().then(console.log)
+```
+
+### 2. 通过 cdn 引入
+```html
+<script src="https://newbie.zeromesh.net/web.browser.min.js"></script>
+<script>
+console.log(Mixin)
+// 获取 Mixin 网络内资产排名前 100 的资产
+Mixin.readNetworkAssetsTop().then(console.log)
+</script>
+```

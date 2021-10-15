@@ -1,11 +1,18 @@
-import * as browserObj from './browser'
-import { Client } from './client'
-import * as schemaObj from './schema'
-import * as networkObj from './network'
+import * as asset from './asset'
+import * as browser from './browser'
+import { mixinRequest, mixinSchema } from './http'
+import * as message from './message'
+import * as network from './network'
+import * as user from './user'
+import * as userWithToken from './userWithToken'
 export const Mixin = {
-  ...browserObj,
-  ...schemaObj,
-  ...networkObj,
-  Client
+  mixinRequest,
+  mixinSchema,
+  ...browser,
+  ...message,
+  ...asset,
+  ...network,
+  ...user,
+  ...userWithToken,
 }
 export default Mixin

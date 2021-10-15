@@ -15,7 +15,7 @@ function genConfig(name) {
       extensions: ['.ts', '.js'],
     },
     output: {
-      filename: 'mixin.' + name + '.js',
+      filename: 'web.' + name + '.js',
       libraryTarget: 'umd',
       path: path.resolve(__dirname, 'dist'),
     },

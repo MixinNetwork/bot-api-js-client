@@ -12,9 +12,17 @@
   <script src="../dist/mixin.browser.min.js"></script>
   <script>
     console.log(Mixin)
-    let client = new Mixin.Client('token....')
+    // let client = new Mixin.Client('token....')
     // client.readAssets().then(console.log)
-    Mixin.readNetworkAssetsTop().then(console.log)
+    // Mixin.readNetworkAssetsTop().then(console.log)
+    Mixin.checkIsPaid(
+      {
+        trace_id: "3f4e3052-b882-48e8-a1f9-7b745c639ac7",
+        counter_user_id: "fbd26bc6-3d04-4964-a7fe-a540432b16e2",
+        asset_id: "c94ac88f-4671-3976-b60a-09064f1811e8",
+        amount: "0.06"
+      }
+    ).then(console.log)
   </script>
 </body>
 

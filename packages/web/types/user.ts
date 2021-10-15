@@ -63,3 +63,20 @@ export interface Participant {
   role?: ConversationRole
   created_at?: string
 }
+
+export interface Scope {
+  profile: boolean
+  phone?: boolean
+  contacts?: boolean
+  assets?: boolean
+  snapshots?: boolean
+  messages?: boolean
+};
+
+export interface AuthParams {
+  client_id: string
+  return_to?: string
+  scope?: Scope
+  state?: string
+  useCDN?: boolean
+}

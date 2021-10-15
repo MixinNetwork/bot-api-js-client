@@ -1,4 +1,10 @@
 
+export interface Payment {
+  trace_id: string
+  counter_user_id: string
+  asset_id: string
+  amount: string
+}
 
 export interface Asset {
   asset_id: string
@@ -116,4 +122,13 @@ export interface WithdrawData {
   asset: string
   address: string
   tag: string
+}
+
+export interface PaymentParmas {
+  asset: string
+  amount: string | number
+  memo?: string
+  recipient?: string
+  trace?: string
+  address?: string
 }
