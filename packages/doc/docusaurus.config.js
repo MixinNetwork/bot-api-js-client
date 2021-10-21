@@ -1,12 +1,9 @@
-// @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
-
 const lightCodeTheme = require('prism-react-renderer/themes/github')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 const config = {
-  title: 'Mixin Web SDK',
-  tagline: 'Mixin Web Sdk Documents',
+  title: 'Mixin JS SDK',
+  tagline: 'Mixin JS SDK Documents',
   url: 'https://mixin-web.docs.mixinbots.com',
   baseUrl: '/',
   onBrokenLinks: 'warn',
@@ -18,7 +15,6 @@ const config = {
   presets: [
     [
       '@docusaurus/preset-classic',
-      /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
@@ -46,17 +42,23 @@ const config = {
   themeConfig:
     ({
       navbar: {
-        title: 'Mixin Web SDK',
+        title: 'Mixin JS SDK',
         logo: {
-          alt: 'Mixin Web SDK',
+          alt: 'Mixin JS SDK',
           src: 'img/logo.svg',
         },
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'server/test',
             position: 'left',
-            label: 'Docs',
+            label: 'Server',
+          },
+          {
+            type: 'doc',
+            docId: 'web/intro',
+            position: 'left',
+            label: 'Web',
           },
           {
             type: "localeDropdown",

@@ -10,5 +10,9 @@
   "sidebar.tutorialSidebar.category.Tutorial - Extras": {
     "message": "介绍 - 补充",
     "description": "The label for category Tutorial - Extras in sidebar tutorialSidebar"
+  },
+  "sidebar.serverSidebar.category.client": {
+    "message": "Mixin 实例",
+    "description": "The label for category client in sidebar serverSidebar"
   }
 }

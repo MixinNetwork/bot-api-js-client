@@ -1,0 +1,115 @@
+---
+sidebar_position: 7
+---
+
+# 提现与地址
+
+
+### 1. 创建提现地址
+```js
+client.createAddress({
+  label: "测试地址标签", // 地址标签
+  asset_id: "c6d0c728-2624-429b-8e0d-d9d19b6592fa", // btc 的 asset_id
+  destination: "32wqVf3cGPHcJSWKq3R5N4WsiAGp8V9HXq", // btc 的地址
+  tag: "" // 选填
+})
+// 返回值
+
+```
+
+返回值
+```json
+{
+  "type": "address",
+  "address_id": "70676646-64a5-489a-b95b-77cfb64599b2",
+  "asset_id": "c6d0c728-2624-429b-8e0d-d9d19b6592fa",
+  "destination": "32wqVf3cGPHcJSWKq3R5N4WsiAGp8V9HXq",
+  "tag": "",
+  "label": "测试地址标签",
+  "fee": "0.0001",
+  "reserve": "0",
+  "dust": "0.0001",
+  "updated_at": "2021-10-20T08:39:46.675370353Z"
+}
+```
+
+:::tip提示
+1. 创建提现地址属于敏感操作，需要 `pin` 的支持，如果初始化 `client` 的时候没有提供 `pin` 的话，这里可以传入第二个参数`pin`。
+:::
+
+
+### 2. 读取某个资产的所有提现地址
+```js
+client.readAddresses('c6d0c728-2624-429b-8e0d-d9d19b6592fa')
+```
+返回值
+```json
+[
+  {
+    "type": "address",
+    "address_id": "70676646-64a5-489a-b95b-77cfb64599b2",
+    "asset_id": "c6d0c728-2624-429b-8e0d-d9d19b6592fa",
+    "destination": "32wqVf3cGPHcJSWKq3R5N4WsiAGp8V9HXq",
+    "tag": "",
+    "label": "测试地址标签",
+    "fee": "0.0001",
+    "reserve": "0",
+    "dust": "0.0001",
+    "updated_at": "2021-10-20T08:38:50.741464577Z"
+  }
+]
+```
+
+### 3. 根据 `address_id` 获取提现地址
+```js
+client.readAddress('70676646-64a5-489a-b95b-77cfb64599b2')
+```
+返回值
+```json
+{
+  "type": "address",
+  "address_id": "70676646-64a5-489a-b95b-77cfb64599b2",
+  "asset_id": "c6d0c728-2624-429b-8e0d-d9d19b6592fa",
+  "destination": "32wqVf3cGPHcJSWKq3R5N4WsiAGp8V9HXq",
+  "tag": "",
+  "label": "测试地址标签",
+  "fee": "0.0001",
+  "reserve": "0",
+  "dust": "0.0001",
+  "updated_at": "2021-10-20T08:38:50.741464577Z"
+}
+```
+
+### 4. 根据 `address_id` 删除提现地址
+```js
+client.deleteAddress('70676646-64a5-489a-b95b-77cfb64599b2')
+```
+返回 `undefined` 说明删除成功。
+
+
+### 5. 发起一笔提现
+```js
+client.withdraw({
+  address_id: '70676646-64a5-489a-b95b-77cfb64599b2',
+  amount: '10',
+  trace_id: '526eab99-9e21-40e1-89e9-356af6a21034', // 随机生成 uuid 就行
+  memo: ''
+})
+```
+返回值
+```json
+{
+    "type": "withdrawal",
+    "snapshot_id": "ab56be4c-5b20-xxxx-a9c3-244f9a433f35",
+    "transaction_hash": "axt...ze",
+    "asset_id": "c6d0c728-2624-429b-8e0d-d9d19b6592fa",
+    "amount": "-10",
+    "trace_id": "7c67e8e8-b142-488b-80a3-61d4d29c90bf",
+    "created_at": "2018-05-03T10:08:34.859542588Z"
+}
+```
+
+
+:::tip提示
+1. 类似 `eos` 这种需要 `memo` 支持的，就必须填写 memo
+:::

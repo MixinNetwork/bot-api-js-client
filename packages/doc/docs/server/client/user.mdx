@@ -1,0 +1,25 @@
+---
+sidebar_position: 2
+---
+
+# 用户
+
+### 1. 用户授权登陆
+```js
+client.authorizeToken(code)
+```
+返回值
+```json
+{
+  "access_token": "user authorization token",
+  "scope": "list of permissions that the user has given, e.g. 'PROFILE:READ ASSETS:READ'"
+}
+```
+
+:::tip提示
+1. 这里的 code 获取，需要客户端完成授权操作。 [点击这里](/docs/web/user#2-获取授权的-code) 查看客户端端代码。
+2. 如果初始化 `client` 的时候，携带了 `client_secret`，就只需要传入 `code` 参数即可。
+3. 如果没有，则需要传入第二个参数 `client_secret`。
+:::
+
+

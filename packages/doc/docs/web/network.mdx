@@ -1,0 +1,98 @@
+---
+sidebar_position: 5
+---
+
+# 公开数据
+
+### 1. 获取 Mixin 网络支持的所有公链及详情
+```js
+Mixin.readNetworkChains()
+```
+[点击此处查看结果](https://api.mixin.one/network/chains)
+
+### 2. 获取 Mixin 网络最近转账记录
+```js
+const params = {
+  limit: 10,
+  offset: '2021-10-18T09:11:38.701196Z'
+}
+Mixin.readNetworkSnapshots(params)
+```
+[点击此处查看结果](https://api.mixin.one/network/snapshots?limit=10&offset=2021-10-18T09:11:38.701196Z)
+
+:::tip提示
+`limit`: 默认值和最大值都是 `500`
+`offset`: 默认值是当前时间
+:::
+
+### 3. 获取指定 snapshot 的信息
+```js
+const snapshot_id = `d56cad21-fb14-41e7-b26a-ef80f2e48287`
+Mixin.readNetworkSnapshot(snapshot_id)
+```
+[点击此处查看结果](https://api.mixin.one/network/snapshots/d56cad21-fb14-41e7-b26a-ef80f2e48287)
+
+### 4. 获取 Mixin 网络最近充值提现记录
+```js
+const params = {
+  limit: 10,
+  offset: '2021-10-18T09:11:38.701196Z'
+}
+Mixin.readExternalTransactions(params)
+```
+[点击此处查看结果](https://api.mixin.one/external/transactions)
+
+
+### 5. 获取 Mixin 网络资产价值排行
+```js
+Mixin.readNetworkAssetsTop()
+```
+[点击此处查看结果](https://api.mixin.one/network/assets/top)
+
+:::tip提示
+返回的是前100的。
+:::
+
+### 6. 根据 id 获取资产详情
+```js
+const asset_id = 'c6d0c728-2624-429b-8e0d-d9d19b6592fa'
+Mixin.readNetworkAsset(asset_id)
+```
+[点击此处查看结果](https://api.mixin.one/network/assets/c6d0c728-2624-429b-8e0d-d9d19b6592fa)
+
+
+### 7. 根据 symbol 或 name 搜索资产
+```js
+const symbol = 'btc'
+Mixin.searchNetworkAsset(symbol)
+```
+[点击此处查看结果](https://api.mixin.one/network/assets/search/btc)
+:::tip提示
+注意这里返回的是一个数组。因为可能匹配到多个资产。
+:::
+
+### 8. 检查转账地址是否正确
+```js
+const params = {
+  asset: 'c6d0c728-2624-429b-8e0d-d9d19b6592fa',
+  destination: '3KM2bf9ibEGxe55s7LyKAPrA8dZDGt8x3K'
+}
+Mixin.readExternalAddressesCheck(params)
+```
+[点击此处查看结果](https://api.mixin.one/external/addresses/check?asset=c6d0c728-2624-429b-8e0d-d9d19b6592fa&destination=3KM2bf9ibEGxe55s7LyKAPrA8dZDGt8x3)
+:::tip提示
+1. 如果是正确的地址，那么会返回 `destination` 和指定的 `tag`
+2. 如果是错误的地址，会返回 `30102` 的 `error` 信息。
+:::
+
+### 9. 获取指定资产在指定时刻的价格
+```js
+const asset_id = 'c6d0c728-2624-429b-8e0d-d9d19b6592fa'
+const offset = '2021-10-18T09:11:38.701196Z'
+Mixin.readNetworkTicker(asset_id,offset)
+```
+[点击此处查看结果](https://api.mixin.one/network/ticker?asset=c6d0c728-2624-429b-8e0d-d9d19b6592fa&offset=2021-10-18T09:11:38.701196Z)
+
+
+
+

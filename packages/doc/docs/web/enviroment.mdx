@@ -19,7 +19,9 @@ Mixin.getContext()
 //   locale: string // 客户端语言
 // }
 ```
-> 如果是非 mixin 环境，则返回 undefined
+:::tip提醒
+如果是非 mixin 环境，则返回 undefined
+:::
 
 ### 2. 获取当前页面的设备
 ```js
@@ -35,19 +37,25 @@ Mixin.isImmersive() // true | false
 ```js
 Mixin.getMixinVersion() // 0.31.0
 ```
-> 如果是非 mixin 环境，则返回空字符串
+:::tip提醒
+如果是非 mixin 环境，则返回空字符串
+:::
 
 ### 5. 获取当前会话的 conversation_id
 ```js
 Mixin.getConversationID() // 'uuid'
 ```
-> 如果是非 mixin 环境，则返回空字符串
+:::tip提醒
+如果是非 mixin 环境，则返回空字符串
+:::
 
 ### 6. 获取当前主题色值
 ```js
 Mixin.getTheme() // #ffffff
 ```
-> 其实就是 name=theme-color 的 meta 标签里 content 值
+:::tip提醒
+其实就是 name=theme-color 的 meta 标签里 content 值
+:::
 
 ### 7. 修改当前页面的主题色(手机顶部状态栏的颜色)
 ```js
@@ -62,5 +70,7 @@ mixin.audiosPlayList([
   'https://xxx.mp3'
 ])
 ```
-> 支持多个 mp3 文件的播放，顺序播放。
+:::tip提醒
+支持多个 mp3 文件的播放，顺序播放。
+:::
 

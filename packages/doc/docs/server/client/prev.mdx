@@ -1,0 +1,28 @@
+---
+sidebar_position: 1
+---
+
+# 实例初始化
+:::tip提示
+1. Mixin Messenger 为每个用户提供了两个免费的机器人创建机会。
+2. 如果没有机器人，请 [点击这里](https://developers.mixin.one/dashboard) 前往创建。
+3. 有疑问可以 [点击这里](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649909) 查看视频教程。
+4. 或者有任何其他问题可以 [点击这里](https://developers.mixinbots.com/) 进行创建问题提问。
+:::
+
+
+```js
+const { Client } = require('mixin-node-sdk')
+const client = new Client({
+  "client_id": "",
+  "session_id": "",
+  "pin_token": "",
+  "private_key": "",
+  "pin": ""
+})
+```
+:::tip提示
+后续的章节，都是基于上边创建的 `client`。请先初始化好 `client` 实例。
+:::
+
+

@@ -1,0 +1,99 @@
+---
+sidebar_position: 4
+---
+
+# Schema
+用于与原生客户端进行交互的 api。
+
+## 一、用户相关
+
+### 1. 弹框打开好友的介绍页
+```js
+const user_id = `uuid`
+Mixin.openUserModal(user_id)
+```
+
+
+### 2. 打开某个聊天的会话页面
+```js
+const conversation_id = `uuid`
+const user_id = `uuid`
+Mixin.openConversation(conversation_id, user_id)
+```
+:::tip提示
+1. 如果是群组的话，可以不用传 user_id。
+2. 非群组用户，当 conversation 还未创建时，会使用 user_id 和点击链接用户的 user_id，创建一个 conversation。
+:::
+
+### 3. 打开某个机器人的首页
+```js
+const app_id = 'uuid'
+Mixin.openAppHomePage(app_id, {foo:"bar"})
+```
+:::tip提示
+1. 第一个参数 app_id 是机器人的 client_id 或者可以理解为 机器人的 user_id
+2. 第二个参数是 打开机器人首页时，可以在 url 上传的参数。对应机器人可以通过 url 获取到这个 `{foo:"bar"}`
+:::
+
+## 二、分享相关
+直接会调起选择会话的界面，用户点击会话之后就完成了消息转发。
+
+### 1. 分享一段文字
+```js
+Mixin.shareTextToFriend('要分享的文字')
+```
+
+### 2. 分享一个支持 md 的文章
+```js
+const markdownPost = '# hahaha'
+Mixin.sharePostToFriend(markdownPost)
+```
+### 3. 分享一张图片
+```js
+const imageURL = `https://developers.mixin.one/images/logo.svg`
+Mixin.shareImageToFriend(imageURL)
+```
+
+### 4. 分享一个联系人
+```js
+const user_id = `uuid`
+Mixin.shareContactToFriend(user_id)
+```
+
+### 5. 分享一个应用卡片
+```js
+const appCard = {
+  app_id: 'uuid',
+  title: 'Mixin官网',
+  description: '隐私、安全、快速、牛逼。',
+  icon_url: 'https://developers.mixin.one/images/logo.svg',
+  action: 'https://mixin.one'
+}
+Mixin.shareAppCardToFriend(appCard)
+```
+:::tip提示
+`app_id`: 打开机器人的 client_id，用户打开链接之后，通过右上角三个点，可以直接打开机器人的介绍页弹框。
+`title`: 标题
+`description`: 描述信息
+`icon_url`: 图标
+`action`: 打开的链接
+:::
+
+### 6. 分享一个直播/视频卡片
+```js
+const liveCard = {
+  url: 'xxxx.m3u8',
+  width: 300,
+  height: 500,
+  thumb_url: ''
+}
+Mixin.shareLiveToFriend(liveCard)
+```
+:::tip提示
+`url`: m3u8 的地址或者是 mp4 的地址
+`width`: 卡片的宽度
+`height`: 卡片的高度
+`thumb_url`: 封面的图片地址，可以为空
+:::
+
+
