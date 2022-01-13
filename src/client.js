@@ -2,11 +2,8 @@ import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
 
-import Util from './util'
-
 class Client {
   constructor() {
-    this.util = new Util()
   }
 
   signAuthenticationToken(uid, sid, privateKey, method, uri, params, scp) {

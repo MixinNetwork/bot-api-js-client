@@ -1,6 +1,5 @@
 import forge from 'node-forge'
 import LittleEndian from 'int64-buffer'
-
 import Client from './client'
 
 class User {
