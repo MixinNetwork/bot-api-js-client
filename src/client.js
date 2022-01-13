@@ -34,7 +34,7 @@ class Client {
     let header = Buffer.from(JSON.stringify({ alg: "EdDSA", typ: "JWT" }), 'utf8').toString('base64')
 
     let result = [header, payload]
-    let sign = this.util.base64rawUrl(forge.pki.ed25519.sign({
+    let sign = this.util.base64RawURLEncode(forge.pki.ed25519.sign({
       message: result.join('.'),
       encoding: 'utf8',
       privateKey
@@ -43,7 +43,7 @@ class Client {
     return result.join('.')
   }
 
-  request(uid, sid, privateKey, method, path, data, callback) {
+  request(uid, sid, privateKey, method, path, data) {
     const accessToken = this.signAuthenticationToken(
       uid,
       sid,
@@ -52,10 +52,10 @@ class Client {
       path,
       JSON.stringify(data)
     )
-    return requestByToken(method. path, data, accessToken, callback)
+    return requestByToken(method. path, data, accessToken)
   }
 
-  requestByToken(method, path, data, accessToken, callback) {
+  requestByToken(method, path, data, accessToken) {
     return axios({
       method,
       url: 'https://mixin-api.zeromesh.net' + path,

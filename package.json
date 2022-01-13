@@ -22,17 +22,16 @@
   "author": "jadeydi",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
-    "int64-buffer": "^0.99.1007",
-    "jsonwebtoken": "^8.5.0",
+    "axios": "^0.24.0",
+    "int64-buffer": "^1.0.1",
     "jssha": "^3.2.0",
-    "node-forge": "^0.10.0",
-    "uuid": "^7.0.3"
+    "node-forge": "^1.2.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "rollup": "^2.7.6",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "rollup": "^2.63.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-uglify": "^6.0.4"
