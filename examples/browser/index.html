@@ -19,15 +19,8 @@
         var sessionId = ""
         var privateKey = ""
 
-        var bot = new Mixin()
-        console.log(bot.environment())
-        console.log(bot.getMixinContext)
-        console.log(bot.getMixinContext())
-        console.log(bot.conversationId())
-        console.log(bot.reloadTheme())
- 
         // create user
-        bot.createUser("username", clientId, sessionId, privateKey, function(userData) {
+        Mixin.user.createUser("username", clientId, sessionId, privateKey, function(userData) {
             console.log(userData)
             // setup pin
             bot.setupPin("123456", userData.user, userData.sessionKey, function(setupData) {

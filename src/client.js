@@ -1,12 +1,15 @@
 import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
+import Util from './util'
 
 class Client {
   constructor() {
+    this.util = new Util();
   }
 
   signAuthenticationToken(uid, sid, privateKey, method, uri, params, scp) {
+    privateKey = Buffer.from(privateKey, 'base64')
     method = method.toLocaleUpperCase()
     if (typeof params === 'object') {
       params = JSON.stringify(params)
@@ -28,7 +31,8 @@ class Client {
       scp: scp || 'FULL',
     }
 
-    let header = Buffer.from(JSON.stringify({ alg: "EdDSA", typ: "JWT" }), 'utf8').toString('base64')
+    let header = this.util.base64RawURLEncode(Buffer.from(JSON.stringify({ alg: "EdDSA", typ: "JWT" }), 'utf8'));
+    payload = this.util.base64RawURLEncode(Buffer.from(JSON.stringify(payload), 'utf8'));
 
     let result = [header, payload]
     let sign = this.util.base64RawURLEncode(forge.pki.ed25519.sign({

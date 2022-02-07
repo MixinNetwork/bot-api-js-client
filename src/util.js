@@ -38,7 +38,7 @@ class Util {
   }
 
   base64RawURLEncode(buffer) {
-    return forge.util.encode64(buffer).replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    return buffer.toString('base64').replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
   }
 
   hashMembers(ids) {
