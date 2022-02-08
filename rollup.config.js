@@ -9,14 +9,14 @@ const plugins = [
   babel({
     exclude: 'node_modules/**',
   }),
-  uglify(),
 ]
 
 export default {
   input: 'src/mixin.js',
   output: {
+    file: 'lib/mixin.js',
+    format: 'iife',
     name: 'Mixin',
-    format: 'umd',
   },
   plugins,
 }

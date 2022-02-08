@@ -12,7 +12,7 @@
     "url": "git+https://github.com/MixinNetwork/bot-api-js-client.git"
   },
   "scripts": {
-    "prepublish": "rollup -c > lib/mixin.js && BROWSER=true rollup -c > lib/mixin.browser.js",
+    "prepublish": "rollup -c",
     "test": "jest"
   },
   "babel": {
@@ -24,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
+    "buffer": "^6.0.3",
     "int64-buffer": "^1.0.1",
     "jssha": "^3.2.0",
     "node-forge": "^1.2.1",

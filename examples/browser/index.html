@@ -13,14 +13,14 @@
 </head>
 <body>
     Mixin bot api
-    <script src="../../lib/mixin.browser.js"></script>
+    <script src="../../lib/mixin.js"></script>
     <script>
-        var clientId = ""
-        var sessionId = ""
-        var privateKey = ""
+        const appId = '4b5a39fb-7500-4d7b-9cce-7c2fdd548b11';
+        const sessionId = 'da7ddad7-558d-492b-8913-08059a1a0d19';
+        const privateKey = 'BiSlfJ0HN4C5eOQbVp61cdyMvxan8HCQywixZNZsZs3d81Zzs5SFcocq9pMpMFtlQwUtgpPIiQsxeMazk77huA';
 
         // create user
-        Mixin.user.createUser("username", clientId, sessionId, privateKey, function(userData) {
+        Mixin.user.createUser("username", appId, sessionId, privateKey, function(userData) {
             console.log(userData)
             // setup pin
             bot.setupPin("123456", userData.user, userData.sessionKey, function(setupData) {
