@@ -45,18 +45,6 @@ class Client {
     return result.join('.')
   }
 
-  request(uid, sid, privateKey, method, path, data) {
-    const accessToken = this.signAuthenticationToken(
-      uid,
-      sid,
-      privateKey,
-      method,
-      path,
-      JSON.stringify(data)
-    )
-    return requestByToken(method. path, data, accessToken)
-  }
-
   requestByToken(method, path, data, accessToken) {
     return axios({
       method,
@@ -67,6 +55,19 @@ class Client {
         Authorization: 'Bearer ' + accessToken,
       },
     })
+  }
+
+  request(uid, sid, privateKey, method, path, data) {
+    const m = method;
+    const accessToken = this.signAuthenticationToken(
+      uid,
+      sid,
+      privateKey,
+      method,
+      path,
+      JSON.stringify(data)
+    )
+    return this.requestByToken(method, path, data, accessToken)
   }
 }
 

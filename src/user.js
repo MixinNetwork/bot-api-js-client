@@ -8,12 +8,9 @@ class User {
   }
 
   generateSessionKeypair() {
-    let keypair = forge.pki.rsa.generateKeyPair({ bits: 2048, e: 0x10001 })
-    let body = forge.asn1
-      .toDer(forge.pki.publicKeyToAsn1(keypair.publicKey))
-      .getBytes()
-    let public_key = forge.util.encode64(body, 64)
-    let private_key = forge.pki.privateKeyToPem(keypair.privateKey)
+    let keypair = forge.pki.ed25519.generateKeyPair()
+    let public_key = keypair.publicKey.toString('base64')
+    let private_key = keypair.privateKey.toString('base64')
     return { public: public_key, private: private_key }
   }
 
@@ -85,22 +82,15 @@ class User {
 
   createUser(fullName, uid, sid, mainPrivateKey, callback) {
     const keyPair = this.generateSessionKeypair()
-
-    const publicKey = keyPair.public
-    const privateKey = keyPair.private
-
-    if (publicKey.indexOf('-----') !== -1) {
-      publicKey = publicKey.split('-----')[2].replace(/\r?\n|\r/g, '')
-    }
-
-    let sessionSecret = publicKey
-    let sessionKey = privateKey
-
+    const sessionSecret = keyPair.public
+    const sessionKey = keyPair.private
     const data = {
       session_secret: sessionSecret,
       full_name: fullName,
     }
-    return this.client.request(uid, sid, mainPrivateKey, 'POST', '/users', data).then(
+
+    const client = new Client()
+    return client.request(uid, sid, mainPrivateKey, 'POST', '/users', data).then(
       (res) => {
         const user = res.data
         const userData = {
