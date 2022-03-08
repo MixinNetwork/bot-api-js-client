@@ -9,8 +9,8 @@ class User {
 
   generateSessionKeypair() {
     let keypair = forge.pki.ed25519.generateKeyPair()
-    let public_key = keypair.publicKey.toString('base64').replaceAll('+', '-').replaceAll('/', '_')
-    let private_key = keypair.privateKey.toString('base64').replaceAll('+', '-').replaceAll('/', '_')
+    let public_key = keypair.publicKey.toString('base64').replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '')
+    let private_key = keypair.privateKey.toString('base64').replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '')
     return { public: public_key, private: private_key }
   }
 
