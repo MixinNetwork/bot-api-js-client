@@ -1,16 +1,19 @@
 import forge from 'node-forge'
 import LittleEndian from 'int64-buffer'
+import { sharedKey } from 'curve25519-js';
 import Client from './client'
+import Util from './util'
 
 class User {
   constructor() {
-    this.client = new Client()
+    this.client = new Client();
+    this.util = new Util();
   }
 
   generateSessionKeypair() {
     let keypair = forge.pki.ed25519.generateKeyPair()
-    let public_key = keypair.publicKey.toString('base64').replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '')
-    let private_key = keypair.privateKey.toString('base64').replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '')
+    let public_key = this.util.base64RawURLEncode(keypair.publicKey);
+    let private_key = this.util.base64RawURLEncode(keypair.privateKey);
     return { public: public_key, private: private_key }
   }
 
@@ -61,6 +64,76 @@ class User {
     })
     cipher.update(buffer)
 
+    cipher.finish(() => true)
+
+    let pin_buff = forge.util.createBuffer()
+    pin_buff.putBytes(iv)
+    pin_buff.putBytes(cipher.output.getBytes())
+
+    const encryptedBytes = pin_buff.getBytes()
+    return forge.util.encode64(encryptedBytes)
+  }
+
+  privateKeyToCurve25519(privateKey) {
+    const seed = privateKey.subarray(0, 32);
+    const md = forge.md.sha512.create();
+    md.update(seed.toString('binary'));
+    const digestx = md.digest();
+    const digest = Buffer.from(digestx.getBytes(), 'binary');
+
+    digest[0] &= 248;
+    digest[31] &= 127;
+    digest[31] |= 64;
+    return digest.subarray(0, 32);
+  }
+
+  sharedEd25519Key(pinToken, privateKey) {
+    pinToken = Buffer.from(pinToken, 'base64')
+    privateKey = Buffer.from(privateKey, 'base64')
+    privateKey = this.privateKeyToCurve25519(privateKey)
+
+    return sharedKey(privateKey, pinToken);
+  }
+
+  signEd25519PIN(pin, pinToken, sessionId, privateKey, iterator) {
+    const blockSize = 16
+    let Uint64
+
+    try {
+      if (LittleEndian) Uint64 = LittleEndian.Int64LE
+      if (Uint64BE) Uint64 = Uint64LE
+    } catch (error) {}
+
+    const sharedKey = this.sharedEd25519Key(pinToken, privateKey)
+
+    let _iterator = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer)
+    _iterator = forge.util.createBuffer(_iterator)
+    iterator = iterator || _iterator
+    iterator = iterator.getBytes()
+    let time = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer)
+    time = forge.util.createBuffer(time)
+    time = time.getBytes()
+
+    let pinByte = forge.util.createBuffer(pin, 'utf8')
+
+    let buffer = forge.util.createBuffer()
+    buffer.putBytes(pinByte)
+    buffer.putBytes(time)
+    buffer.putBytes(iterator)
+    let paddingLen = blockSize - (buffer.length() % blockSize)
+    let padding = forge.util.hexToBytes(paddingLen.toString(16))
+
+    for (let i=0; i < paddingLen; i++) {
+      buffer.putBytes(padding)
+    }
+    let iv = forge.random.getBytesSync(16)
+    let key = this.hexToBytes(forge.util.binary.hex.encode(sharedKey))
+    let cipher = forge.cipher.createCipher('AES-CBC', key)
+
+    cipher.start({
+      iv: iv,
+    })
+    cipher.update(buffer)
     cipher.finish(() => true)
 
     let pin_buff = forge.util.createBuffer()
@@ -137,6 +210,22 @@ class User {
       user.session_id,
       sessionKey,
       callback
+    )
+  }
+
+  verifyPin(pin, pinToken, uid, sid, sessionKey, callback) {
+    const encryptedPin = this.signEd25519PIN(pin, pinToken, sid, sessionKey);
+    const data = {
+      pin: encryptedPin,
+    }
+    return this.client.request(uid, sid, sessionKey, 'POST', '/pin/verify', data).then(
+      (res) => {
+        if (callback) {
+          callback(res.data)
+        } else {
+          return res.data
+        }
+      }
     )
   }
 
