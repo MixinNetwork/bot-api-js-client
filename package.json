@@ -23,7 +23,7 @@
   "author": "jadeydi",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.24.0",
+    "axios": "^0.26.1",
     "buffer": "^6.0.3",
     "crypto": "^1.0.1",
     "curve25519-js": "^0.0.4",
