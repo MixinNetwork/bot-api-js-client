@@ -1,11 +1,13 @@
 import User from './user'
-import Util from './util'
-import Client from './client'
+import HTTP from './http'
+import Utils from './utils'
 
-const mixin = {
-  user: new User(),
-  util: new Util(),
-  client: new Client(),
+class Mixin {
+  constructor(keystore) {
+    this.user = new User(keystore)
+    this.http = new HTTP(keystore)
+    this.utils = Utils,
+  }
 }
 
-export default mixin;
+export default Mixin;
