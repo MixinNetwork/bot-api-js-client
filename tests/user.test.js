@@ -1,4 +1,4 @@
-import User from './user'
+import User from '../src/user'
 
 const user = new User();
 const appId = '';
