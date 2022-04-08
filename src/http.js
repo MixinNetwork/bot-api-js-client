@@ -24,6 +24,8 @@ class HTTP {
       params = JSON.stringify(_params);
     } else if (typeof _params !== 'string') {
       params = '';
+    } else {
+      params = _params;
     }
 
     const iat = Math.floor(Date.now() / 1000);

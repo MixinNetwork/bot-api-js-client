@@ -39,7 +39,7 @@ class User {
   }
 
   me(callback) {
-    return this.http.request('GET', '/me', '').then(
+    return this.http.request('GET', '/me').then(
       (res) => {
         if (callback) {
           return callback(res.data);

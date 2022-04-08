@@ -14,9 +14,7 @@ describe('Tests for user', () => {
     console.log(data);
   }));
 
-    test('user verify pin', () => {
-      return user.verifyPin().then((data) => {
-        console.log(data)
-      });
-    });
+  test('user verify pin', () => user.verifyPin().then((data) => {
+    console.log(data);
+  }));
 });
