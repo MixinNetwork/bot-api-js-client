@@ -1,13 +1,16 @@
 import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
+import Utils from './utils'
 
 class HTTP {
-  constructor(uid, sid, privateKey, host) {
-    this.uid = uid;
-    this.sid = sid;
-    this.privateKey = privateKey;
-    this.host = host || 'https://mixin-api.zeromesh.net';
+  constructor(keystore) {
+    keystore = keystore || {};
+    this.uid = keystore.user_id;
+    this.sid = keystore.session_id;
+    this.privateKey = keystore.private_key;
+    this.host = keystore.host || 'https://mixin-api.zeromesh.net';
+    this.utils = Utils;
   }
 
   setRPCHost(host) {
@@ -36,18 +39,19 @@ class HTTP {
       scp: scp || 'FULL',
     }
 
-    let header = this.util.base64RawURLEncode(JSON.stringify({ alg: "EdDSA", typ: "JWT" }));
-    payload = this.util.base64RawURLEncode(JSON.stringify(payload));
+    let header = this.utils.base64RawURLEncode(JSON.stringify({ alg: "EdDSA", typ: "JWT" }));
+    payload = this.utils.base64RawURLEncode(JSON.stringify(payload));
 
-    let privateKey = forge.util.decode64(this.privateKey);
-    let result = [header, payload]
-    let sign = this.util.base64RawURLEncode(forge.pki.ed25519.sign({
+    let privateKey = this.utils.base64RawURLDecode(this.privateKey);
+    let result = [header, payload];
+    let signData = forge.pki.ed25519.sign({
       message: result.join('.'),
       encoding: 'utf8',
-      privateKey
-    }))
-    result.push(sign)
-    return result.join('.')
+      privateKey,
+    });
+    let sign = this.utils.base64RawURLEncode(signData);
+    result.push(sign);
+    return result.join('.');
   }
 
   request(method, path, data) {
