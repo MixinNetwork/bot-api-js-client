@@ -1,16 +1,20 @@
-const Buffer = require('buffer/').Buffer
 import forge from 'node-forge'
 import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
-import Util from './util'
 
 class HTTP {
-  constructor() {
-    this.util = new Util();
+  constructor(uid, sid, privateKey, host) {
+    this.uid = uid;
+    this.sid = sid;
+    this.privateKey = privateKey;
+    this.host = host || 'https://mixin-api.zeromesh.net';
   }
 
-  signAuthenticationToken(uid, sid, privateKey, method, uri, params, scp) {
-    privateKey = Buffer.from(privateKey, 'base64')
+  setRPCHost(host) {
+    this.host = host;
+  }
+
+  signAuthenticationToken(method, uri, params, scp) {
     method = method.toLocaleUpperCase()
     if (typeof params === 'object') {
       params = JSON.stringify(params)
@@ -23,8 +27,8 @@ class HTTP {
     let md = forge.md.sha256.create()
     md.update(method + uri + params, 'utf8')
     let payload = {
-      uid: uid,
-      sid: sid,
+      uid: this.uid,
+      sid: this.sid,
       iat: iat,
       exp: exp,
       jti: uuidv4(),
@@ -32,9 +36,10 @@ class HTTP {
       scp: scp || 'FULL',
     }
 
-    let header = this.util.base64RawURLEncode(Buffer.from(JSON.stringify({ alg: "EdDSA", typ: "JWT" }), 'utf8'));
-    payload = this.util.base64RawURLEncode(Buffer.from(JSON.stringify(payload), 'utf8'));
+    let header = this.util.base64RawURLEncode(JSON.stringify({ alg: "EdDSA", typ: "JWT" }));
+    payload = this.util.base64RawURLEncode(JSON.stringify(payload));
 
+    let privateKey = forge.util.decode64(this.privateKey);
     let result = [header, payload]
     let sign = this.util.base64RawURLEncode(forge.pki.ed25519.sign({
       message: result.join('.'),
@@ -45,29 +50,26 @@ class HTTP {
     return result.join('.')
   }
 
+  request(method, path, data) {
+    const m = method;
+    const accessToken = this.signAuthenticationToken(
+      method,
+      path,
+      JSON.stringify(data)
+    )
+    return this.requestByToken(method, path, data, accessToken)
+  }
+
   requestByToken(method, path, data, accessToken) {
     return axios({
       method,
-      url: 'https://mixin-api.zeromesh.net' + path,
+      url: this.host + path,
       data,
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + accessToken,
       },
     })
-  }
-
-  request(uid, sid, privateKey, method, path, data) {
-    const m = method;
-    const accessToken = this.signAuthenticationToken(
-      uid,
-      sid,
-      privateKey,
-      method,
-      path,
-      JSON.stringify(data)
-    )
-    return this.requestByToken(method, path, data, accessToken)
   }
 }
 

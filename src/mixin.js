@@ -1,11 +1,11 @@
 import User from './user'
-import Util from './util'
 import HTTP from './http'
+import Utils from './utils'
 
 const mixin = {
   user: new User(),
-  util: new Util(),
   http: new HTTP(),
+  utils: Utils,
 }
 
 export default mixin;

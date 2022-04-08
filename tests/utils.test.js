@@ -6,6 +6,8 @@ describe('Tests for utils', () => {
     let buffer = forge.util.createBuffer('base64RawURLEncode should be url safe.', 'utf8');
     expect(Utils.base64RawURLEncode()).toBe('');
     expect(Utils.base64RawURLEncode(buffer)).toBe('YmFzZTY0UmF3VVJMRW5jb2RlIHNob3VsZCBiZSB1cmwgc2FmZS4');
+    let decode = forge.util.decode64('YmFzZTY0UmF3VVJMRW5jb2RlIHNob3VsZCBiZSB1cmwgc2FmZS4');
+    expect(decode).toMatch('base64RawURLEncode should be url safe.');
   });
 
   test('challenge should return two url safe string', () => {
