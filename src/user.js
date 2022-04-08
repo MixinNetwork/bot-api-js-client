@@ -1,12 +1,12 @@
-import forge from 'node-forge'
-import LittleEndian from 'int64-buffer'
+import forge from 'node-forge';
+import LittleEndian from 'int64-buffer';
 import { sharedKey } from 'curve25519-js';
-import HTTP from './http'
-import Utils from './utils'
+import HTTP from './http';
+import Utils from './utils';
 
 class User {
-  constructor(keystore) {
-    keystore = keystore || {};
+  constructor(_keystore) {
+    const keystore = _keystore || {};
     this.uid = keystore.user_id;
     this.sid = keystore.session_id;
     this.privateKey = keystore.private_key;
@@ -17,7 +17,7 @@ class User {
   }
 
   createUser(fullName, callback) {
-    const {publicKey, privateKey} = this.utils.generateED25519Keypair();
+    const { publicKey, privateKey } = this.utils.generateED25519Keypair();
     const data = {
       session_secret: publicKey,
       full_name: fullName,
@@ -25,17 +25,16 @@ class User {
 
     return this.http.request('POST', '/users', data).then(
       (res) => {
-        const user = res.data
+        const user = res.data;
         const userData = {
           user,
           privateKey,
-        }
+        };
         if (callback) {
-          callback(userData)
-        } else {
-          return userData
+          return callback(userData);
         }
-      }
+        return userData;
+      },
     );
   }
 
@@ -46,23 +45,22 @@ class User {
       '',
       encryptedPIN,
       callback,
-    )
+    );
   }
 
   updatePin(oldEncryptedPin, encryptedPin, callback) {
     const data = {
       old_pin: oldEncryptedPin,
       pin: encryptedPin,
-    }
+    };
     return this.http.request('POST', '/pin/update', data).then(
       (res) => {
         if (callback) {
-          callback(res.data)
-        } else {
-          return res.data
+          return callback(res.data);
         }
-      }
-    )
+        return res.data;
+      },
+    );
   }
 
   verifyPin(callback) {
@@ -73,12 +71,11 @@ class User {
     return this.http.request('POST', '/pin/verify', data).then(
       (res) => {
         if (callback) {
-          callback(res.data)
-        } else {
-          return res.data
+          return callback(res.data);
         }
-      }
-    )
+        return res.data;
+      },
+    );
   }
 
   privateKeyToCurve25519(privateKey) {
@@ -94,23 +91,23 @@ class User {
     return digest.subarray(0, 32);
   }
 
-  sharedEd25519Key(pinToken, privateKey) {
-    pinToken = Buffer.from(pinToken, 'base64');
-    privateKey = Buffer.from(privateKey, 'base64');
+  sharedEd25519Key(_pinToken, _privateKey) {
+    const pinToken = Buffer.from(_pinToken, 'base64');
+    let privateKey = Buffer.from(_privateKey, 'base64');
     privateKey = this.privateKeyToCurve25519(privateKey);
 
     return sharedKey(privateKey, pinToken);
   }
 
   hexToBytes(hex) {
-    const bytes = []
+    const bytes = [];
     for (let c = 0; c < hex.length; c += 2) {
-      bytes.push(parseInt(hex.substr(c, 2), 16))
+      bytes.push(parseInt(hex.substr(c, 2), 16));
     }
-    return bytes
+    return bytes;
   }
 
-  signEd25519PIN(iterator) {
+  signEd25519PIN(_iterator) {
     const blockSize = 16;
     let Uint64;
 
@@ -119,43 +116,43 @@ class User {
       if (Uint64BE) Uint64 = Uint64LE;
     } catch (error) {}
 
-    const sharedKey = this.sharedEd25519Key(this.pinToken, this.privateKey);
+    const sharedkey = this.sharedEd25519Key(this.pinToken, this.privateKey);
 
-    let _iterator = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer);
-    _iterator = forge.util.createBuffer(_iterator);
-    iterator = iterator || _iterator;
+    let iteratorTmp = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer);
+    iteratorTmp = forge.util.createBuffer(iteratorTmp);
+    let iterator = _iterator || iteratorTmp;
     iterator = iterator.getBytes();
     let time = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer);
     time = forge.util.createBuffer(time);
     time = time.getBytes();
 
-    let pinByte = forge.util.createBuffer(this.pin, 'utf8');
+    const pinByte = forge.util.createBuffer(this.pin, 'utf8');
 
-    let buffer = forge.util.createBuffer();
+    const buffer = forge.util.createBuffer();
     buffer.putBytes(pinByte);
     buffer.putBytes(time);
     buffer.putBytes(iterator);
-    let paddingLen = blockSize - (buffer.length() % blockSize);
-    let padding = forge.util.hexToBytes(paddingLen.toString(16));
+    const paddingLen = blockSize - (buffer.length() % blockSize);
+    const padding = forge.util.hexToBytes(paddingLen.toString(16));
 
-    for (let i=0; i < paddingLen; i++) {
+    for (let i = 0; i < paddingLen; i++) {
       buffer.putBytes(padding);
     }
-    let iv = forge.random.getBytesSync(16);
-    let key = this.hexToBytes(forge.util.binary.hex.encode(sharedKey));
-    let cipher = forge.cipher.createCipher('AES-CBC', key);
+    const iv = forge.random.getBytesSync(16);
+    const key = this.hexToBytes(forge.util.binary.hex.encode(sharedkey));
+    const cipher = forge.cipher.createCipher('AES-CBC', key);
 
     cipher.start({
-      iv: iv,
+      iv,
     });
     cipher.update(buffer);
     cipher.finish(() => true);
 
-    let pin_buff = forge.util.createBuffer();
-    pin_buff.putBytes(iv);
-    pin_buff.putBytes(cipher.output.getBytes());
+    const pinBuff = forge.util.createBuffer();
+    pinBuff.putBytes(iv);
+    pinBuff.putBytes(cipher.output.getBytes());
 
-    const encryptedBytes = pin_buff.getBytes();
+    const encryptedBytes = pinBuff.getBytes();
     return forge.util.encode64(encryptedBytes);
   }
 }

@@ -1,15 +1,13 @@
-import forge from 'node-forge'
+import forge from 'node-forge';
 import jsSHA from 'jssha';
 
 class Utils {
-  constructor() {
-  }
-
-  base64RawURLEncode(buffer) {
-    if (buffer instanceof forge.util.ByteBuffer) {
-      buffer = buffer.bytes();
-    } else if (buffer instanceof Buffer) {
-      buffer = forge.util.createBuffer(buffer.toString('binary')).bytes();
+  base64RawURLEncode(_buffer) {
+    let buffer;
+    if (_buffer instanceof forge.util.ByteBuffer) {
+      buffer = _buffer.bytes();
+    } else if (_buffer instanceof Buffer) {
+      buffer = forge.util.createBuffer(_buffer.toString('binary')).bytes();
     }
     if (!buffer) {
       return '';
@@ -17,12 +15,12 @@ class Utils {
     return forge.util.encode64(buffer).replaceAll(/\=/g, '').replaceAll(/\+/g, '-').replaceAll(/\//g, '_');
   }
 
-  base64RawURLDecode(data) {
-    data = data.replaceAll('-', '+').replaceAll('_', '/');
+  base64RawURLDecode(_data) {
+    let data = _data.replaceAll('-', '+').replaceAll('_', '/');
     if (data.length % 4 === 2) {
       data += '==';
     }
-    let privateKey = forge.util.decode64(data);
+    const privateKey = forge.util.decode64(data);
     return privateKey;
   }
 
@@ -51,65 +49,48 @@ class Utils {
   }
 
   challenge() {
-    let key = forge.random.getBytesSync(32);
-    let verifier = this.base64RawURLEncode(key);
+    const key = forge.random.getBytesSync(32);
+    const verifier = this.base64RawURLEncode(key);
 
-    let md = forge.md.sha256.create();
+    const md = forge.md.sha256.create();
     md.update(key);
-    let challenge = this.base64RawURLEncode(md.digest().getBytes());
+    const challenge = this.base64RawURLEncode(md.digest().getBytes());
     // window.localStorage.setItem('verifier', verifier);
-    return {challenge, verifier};
+    return { challenge, verifier };
   }
 
   getMixinContext() {
-    let ctx = {}
+    let ctx = {};
     if (
-      window.webkit &&
-      window.webkit.messageHandlers &&
-      window.webkit.messageHandlers.MixinContext
+      window.webkit
+      && window.webkit.messageHandlers
+      && window.webkit.messageHandlers.MixinContext
     ) {
-      ctx = JSON.parse(prompt('MixinContext.getContext()'))
-      ctx.platform = ctx.platform || 'iOS'
+      ctx = JSON.parse(prompt('MixinContext.getContext()'));
+      ctx.platform = ctx.platform || 'iOS';
     } else if (
-      window.MixinContext &&
-      typeof window.MixinContext.getContext === 'function'
+      window.MixinContext
+      && typeof window.MixinContext.getContext === 'function'
     ) {
-      ctx = JSON.parse(window.MixinContext.getContext())
-      ctx.platform = ctx.platform || 'Android'
+      ctx = JSON.parse(window.MixinContext.getContext());
+      ctx.platform = ctx.platform || 'Android';
     }
-    return ctx
+    return ctx;
   }
 
   generateED25519Keypair() {
-    let keypair = forge.pki.ed25519.generateKeyPair()
-    let publicKey = this.base64RawURLEncode(keypair.publicKey);
-    let privateKey = this.base64RawURLEncode(keypair.privateKey);
+    const keypair = forge.pki.ed25519.generateKeyPair();
+    const publicKey = this.base64RawURLEncode(keypair.publicKey);
+    const privateKey = this.base64RawURLEncode(keypair.privateKey);
     return { publicKey, privateKey };
   }
 
   hashMembers(ids) {
-    let key = ids.sort().join('');
-    let sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' })
+    const key = ids.sort().join('');
+    const sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' })
     sha.update(key);
     return sha.getHash('HEX');
   }
-
-  reloadTheme() {
-    switch (this.environment()) {
-      case 'iOS':
-        window.webkit &&
-          window.webkit.messageHandlers &&
-          window.webkit.messageHandlers.reloadTheme &&
-          window.webkit.messageHandlers.reloadTheme.postMessage('')
-        return
-      case 'Android':
-      case 'Desktop':
-        window.MixinContext &&
-          typeof window.MixinContext.reloadTheme === 'function' &&
-          window.MixinContext.reloadTheme()
-        return
-    }
-  }
 }
 
-export default new Utils;
+export default new Utils();
