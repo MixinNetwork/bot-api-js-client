@@ -2,10 +2,10 @@ import User from './user'
 import HTTP from './http'
 import Utils from './utils'
 
-const mixin = {
+const Mixin = {
   user: new User(),
   http: new HTTP(),
   utils: Utils,
 }
 
-export default mixin;
+export default Mixin;
