@@ -13,13 +13,7 @@ describe('Tests for utils', () => {
   });
 
   test('challenge should return two url safe string', () => {
-    const { challenge, verifier } = Utils.challenge();
-    expect(challenge.length).toBe(43);
-    expect(verifier.length).toBe(43);
-  });
-
-  test('challenge should return two url safe string', () => {
-    const { challenge, verifier } = Utils.challenge();
+    const { challenge, verifier } = Utils.fetchChallenge();
     expect(challenge.length).toBe(43);
     expect(verifier.length).toBe(43);
   });

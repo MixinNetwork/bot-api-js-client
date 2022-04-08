@@ -10,9 +10,13 @@ describe('Tests for user', () => {
   };
   const user = new User(keystore);
 
-  test('user verify pin', () => {
-    return user.verifyPin().then((data) => {
-      console.log(data)
+  test('user read me', () => user.me().then((data) => {
+    console.log(data);
+  }));
+
+    test('user verify pin', () => {
+      return user.verifyPin().then((data) => {
+        console.log(data)
+      });
     });
-  });
 });

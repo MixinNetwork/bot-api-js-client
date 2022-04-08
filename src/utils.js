@@ -8,11 +8,13 @@ class Utils {
       buffer = _buffer.bytes();
     } else if (_buffer instanceof Buffer) {
       buffer = forge.util.createBuffer(_buffer.toString('binary')).bytes();
+    } else {
+      buffer = _buffer;
     }
     if (!buffer) {
       return '';
     }
-    return forge.util.encode64(buffer).replaceAll(/\=/g, '').replaceAll(/\+/g, '-').replaceAll(/\//g, '_');
+    return forge.util.encode64(buffer).replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_');
   }
 
   base64RawURLDecode(_data) {
@@ -48,7 +50,7 @@ class Utils {
     }
   }
 
-  challenge() {
+  fetchChallenge() {
     const key = forge.random.getBytesSync(32);
     const verifier = this.base64RawURLEncode(key);
 

@@ -20,7 +20,7 @@ class HTTP {
   signAuthenticationToken(_method, uri, _params, scp) {
     const method = _method.toLocaleUpperCase();
     let params;
-    if (typeof params_ === 'object') {
+    if (typeof _params === 'object') {
       params = JSON.stringify(_params);
     } else if (typeof _params !== 'string') {
       params = '';
