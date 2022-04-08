@@ -24,6 +24,6 @@ describe('Tests for utils', () => {
     let hash = Utils.hashMembers(['965e5c6e-434c-3fa9-b780-c50f43cd955c']);
     expect(hash).toBe('b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d8');
     hash = Utils.hashMembers(['965e5c6e-434c-3fa9-b780-c50f43cd955c', 'd1e9ec7e-199d-4578-91a0-a69d9a7ba048']);
-    expect(hash).toBe('b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d8');
+    expect(hash).toBe('6064ec68a229a7d2fe2be652d11477f21705a742e08b75564fd085650f1deaeb');
   });
 });
