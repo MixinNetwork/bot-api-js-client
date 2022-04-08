@@ -9,7 +9,6 @@
   "main": "lib/mixin.js",
   "repository": "git+https://github.com/MixinNetwork/bot-api-js-client.git",
   "scripts": {
-    "prepublish": "rollup -c",
     "test": "jest"
   },
   "babel": {
