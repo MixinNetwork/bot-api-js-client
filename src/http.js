@@ -1,11 +1,11 @@
-import forge from 'node-forge'
-import { v4 as uuidv4 } from 'uuid'
-import axios from 'axios'
-import Utils from './utils'
+import forge from 'node-forge';
+import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+import Utils from './utils';
 
 class HTTP {
-  constructor(keystore) {
-    keystore = keystore || {};
+  constructor(_keystore) {
+    const keystore = _keystore || {};
     this.uid = keystore.user_id;
     this.sid = keystore.session_id;
     this.privateKey = keystore.private_key;
@@ -17,51 +17,53 @@ class HTTP {
     this.host = host;
   }
 
-  signAuthenticationToken(method, uri, params, scp) {
-    method = method.toLocaleUpperCase()
-    if (typeof params === 'object') {
-      params = JSON.stringify(params)
-    } else if (typeof params !== 'string') {
-      params = ''
+  signAuthenticationToken(_method, uri, _params, scp) {
+    const method = _method.toLocaleUpperCase();
+    let params;
+    if (typeof _params === 'object') {
+      params = JSON.stringify(_params);
+    } else if (typeof _params !== 'string') {
+      params = '';
+    } else {
+      params = _params;
     }
 
-    let iat = Math.floor(Date.now() / 1000)
-    let exp = iat + 3600
-    let md = forge.md.sha256.create()
-    md.update(method + uri + params, 'utf8')
+    const iat = Math.floor(Date.now() / 1000);
+    const exp = iat + 3600;
+    const md = forge.md.sha256.create();
+    md.update(method + uri + params, 'utf8');
     let payload = {
       uid: this.uid,
       sid: this.sid,
-      iat: iat,
-      exp: exp,
+      iat,
+      exp,
       jti: uuidv4(),
       sig: md.digest().toHex(),
       scp: scp || 'FULL',
-    }
+    };
 
-    let header = this.utils.base64RawURLEncode(JSON.stringify({ alg: "EdDSA", typ: "JWT" }));
+    const header = this.utils.base64RawURLEncode(JSON.stringify({ alg: 'EdDSA', typ: 'JWT' }));
     payload = this.utils.base64RawURLEncode(JSON.stringify(payload));
 
-    let privateKey = this.utils.base64RawURLDecode(this.privateKey);
-    let result = [header, payload];
-    let signData = forge.pki.ed25519.sign({
+    const privateKey = this.utils.base64RawURLDecode(this.privateKey);
+    const result = [header, payload];
+    const signData = forge.pki.ed25519.sign({
       message: result.join('.'),
       encoding: 'utf8',
       privateKey,
     });
-    let sign = this.utils.base64RawURLEncode(signData);
+    const sign = this.utils.base64RawURLEncode(signData);
     result.push(sign);
     return result.join('.');
   }
 
   request(method, path, data) {
-    const m = method;
     const accessToken = this.signAuthenticationToken(
       method,
       path,
-      JSON.stringify(data)
-    )
-    return this.requestByToken(method, path, data, accessToken)
+      JSON.stringify(data),
+    );
+    return this.requestByToken(method, path, data, accessToken);
   }
 
   requestByToken(method, path, data, accessToken) {
@@ -71,9 +73,9 @@ class HTTP {
       data,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: `Bearer ${accessToken}`,
       },
-    })
+    });
   }
 }
 

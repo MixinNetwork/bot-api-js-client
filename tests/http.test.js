@@ -1,12 +1,17 @@
-import forge from 'node-forge'
-import Utils from '../src/utils'
+import HTTP from '../src/http';
 
 describe('Tests for utils', () => {
+  const keystore = {
+    user_id: '7a522ae4-841b-357b-a7b1-4f5f51488b8f',
+    session_id: '9e8ba070-0e63-4488-89a2-f82c12bbd196',
+    private_key: 'UVXRC3f4sWyFMFq2BmutrYWskXJFy6vmkXY_61weQ1VQl_H_oUba4BRh9nDv8BwlovfqmytE6Q8GEaPgEc09YQ',
+    pin: '291843',
+    pin_token: 'dRSDk0j2tkDF1hJak3MmSGYNEWPE5928IqvXTcIT3Uo',
+  };
 
-  test('base64RawURLEncode should be url safe', () => {
-    let buffer = forge.util.createBuffer('base64RawURLEncode should be url safe.', 'utf8');
-   console.log(buffer.toString());
-    // expect(Utils.base64RawURLEncode()).toBe(undefined);
+  const http = new HTTP(keystore);
+
+  test('signAuthenticationToken', () => {
+    console.log(http.signAuthenticationToken('GET', '/me'));
   });
-
 });

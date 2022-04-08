@@ -1,9 +1,9 @@
-import forge from 'node-forge'
-import Utils from '../src/utils'
+import forge from 'node-forge';
+import Utils from '../src/utils';
 
 describe('Tests for utils', () => {
   test('base64RawURLEncode should be url safe', () => {
-    let buffer = forge.util.createBuffer('base64RawURLEncode should be url safe.', 'utf8');
+    const buffer = forge.util.createBuffer('base64RawURLEncode should be url safe.', 'utf8');
     expect(Utils.base64RawURLEncode()).toBe('');
     expect(Utils.base64RawURLEncode(buffer)).toBe('YmFzZTY0UmF3VVJMRW5jb2RlIHNob3VsZCBiZSB1cmwgc2FmZS4');
     let decode = forge.util.decode64('YmFzZTY0UmF3VVJMRW5jb2RlIHNob3VsZCBiZSB1cmwgc2FmZS4');
@@ -13,13 +13,7 @@ describe('Tests for utils', () => {
   });
 
   test('challenge should return two url safe string', () => {
-    const {challenge, verifier} = Utils.challenge();
-    expect(challenge.length).toBe(43);
-    expect(verifier.length).toBe(43);
-  });
-
-  test('challenge should return two url safe string', () => {
-    const {challenge, verifier} = Utils.challenge();
+    const { challenge, verifier } = Utils.fetchChallenge();
     expect(challenge.length).toBe(43);
     expect(verifier.length).toBe(43);
   });
@@ -32,7 +26,7 @@ describe('Tests for utils', () => {
   });
 
   test('tests for generateED25519Keypair', () => {
-    const {publicKey, privateKey} = Utils.generateED25519Keypair();
+    const { publicKey, privateKey } = Utils.generateED25519Keypair();
     expect(publicKey.length).toBe(43);
     expect(privateKey.length).toBe(86);
   });

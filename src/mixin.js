@@ -1,6 +1,6 @@
-import User from './user'
-import HTTP from './http'
-import Utils from './utils'
+import User from './user';
+import HTTP from './http';
+import Utils from './utils';
 
 class Mixin {
   constructor(keystore) {

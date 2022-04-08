@@ -7,12 +7,14 @@ describe('Tests for user', () => {
     private_key: 'UVXRC3f4sWyFMFq2BmutrYWskXJFy6vmkXY_61weQ1VQl_H_oUba4BRh9nDv8BwlovfqmytE6Q8GEaPgEc09YQ',
     pin: '291843',
     pin_token: 'dRSDk0j2tkDF1hJak3MmSGYNEWPE5928IqvXTcIT3Uo',
-  }
+  };
   const user = new User(keystore);
 
-  test('user verify pin', () => {
-    return user.verifyPin().then((data) => {
-      console.log(data)
-    });
-  });
+  test('user read me', () => user.me().then((data) => {
+    console.log(data);
+  }));
+
+  test('user verify pin', () => user.verifyPin().then((data) => {
+    console.log(data);
+  }));
 });
