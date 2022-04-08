@@ -1,12 +1,12 @@
 import forge from 'node-forge'
 import LittleEndian from 'int64-buffer'
 import { sharedKey } from 'curve25519-js';
-import Client from './client'
+import HTTP from './http'
 import Util from './util'
 
 class User {
   constructor() {
-    this.client = new Client();
+    this.http = new HTTP();
     this.util = new Util();
   }
 
@@ -162,8 +162,8 @@ class User {
       full_name: fullName,
     }
 
-    const client = new Client()
-    return client.request(uid, sid, mainPrivateKey, 'POST', '/users', data).then(
+    const http = new HTTP()
+    return http.request(uid, sid, mainPrivateKey, 'POST', '/users', data).then(
       (res) => {
         const user = res.data
         const userData = {
@@ -184,7 +184,7 @@ class User {
       old_pin: oldEncryptedPin,
       pin: encryptedPin,
     }
-    return this.client.request(uid, sid, sessionKey, 'POST', '/pin/update', data).then(
+    return this.http.request(uid, sid, sessionKey, 'POST', '/pin/update', data).then(
       (res) => {
         if (callback) {
           callback(res.data)
@@ -218,7 +218,7 @@ class User {
     const data = {
       pin: encryptedPin,
     }
-    return this.client.request(uid, sid, sessionKey, 'POST', '/pin/verify', data).then(
+    return this.http.request(uid, sid, sessionKey, 'POST', '/pin/verify', data).then(
       (res) => {
         if (callback) {
           callback(res.data)

@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import axios from 'axios'
 import Util from './util'
 
-class Client {
+class HTTP {
   constructor() {
     this.util = new Util();
   }
@@ -71,4 +71,4 @@ class Client {
   }
 }
 
-export default Client;
+export default HTTP;

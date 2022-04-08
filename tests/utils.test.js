@@ -1,0 +1,29 @@
+import forge from 'node-forge'
+import Utils from '../src/utils'
+
+describe('Tests for utils', () => {
+  test('base64RawURLEncode should be url safe', () => {
+    let buffer = forge.util.createBuffer('base64RawURLEncode should be url safe.', 'utf8');
+    expect(Utils.base64RawURLEncode()).toBe('');
+    expect(Utils.base64RawURLEncode(buffer)).toBe('YmFzZTY0UmF3VVJMRW5jb2RlIHNob3VsZCBiZSB1cmwgc2FmZS4');
+  });
+
+  test('challenge should return two url safe string', () => {
+    const {challenge, verifier} = Utils.challenge();
+    expect(challenge.length).toBe(43);
+    expect(verifier.length).toBe(43);
+  });
+
+  test('challenge should return two url safe string', () => {
+    const {challenge, verifier} = Utils.challenge();
+    expect(challenge.length).toBe(43);
+    expect(verifier.length).toBe(43);
+  });
+
+  test('tests for hashMembers', () => {
+    let hash = Utils.hashMembers(['965e5c6e-434c-3fa9-b780-c50f43cd955c']);
+    expect(hash).toBe('b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d8');
+    hash = Utils.hashMembers(['965e5c6e-434c-3fa9-b780-c50f43cd955c', 'd1e9ec7e-199d-4578-91a0-a69d9a7ba048']);
+    expect(hash).toBe('b9f49cf777dc4d03bc54cd1367eebca319f8603ea1ce18910d09e2c540c630d8');
+  });
+});

@@ -1,7 +1,20 @@
 import forge from 'node-forge'
 import jsSHA from 'jssha';
 
-class Util {
+class Utils {
+  constructor() {
+  }
+
+  base64RawURLEncode(buffer) {
+    if (buffer instanceof forge.util.ByteBuffer) {
+      buffer = buffer.bytes()
+    }
+    if (!buffer) {
+      return ''
+    }
+    return forge.util.encode64(buffer).replaceAll(/\=/g, '').replaceAll(/\+/g, '-').replaceAll(/\//g, '_');
+  }
+
   environment() {
     if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
       return 'iOS';
@@ -33,20 +46,16 @@ class Util {
     let md = forge.md.sha256.create();
     md.update(key);
     let challenge = this.base64RawURLEncode(md.digest().getBytes());
-    window.localStorage.setItem('verifier', verifier);
-    return challenge;
-  }
-
-  base64RawURLEncode(buffer) {
-    return buffer.toString('base64').replace(/\=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    // window.localStorage.setItem('verifier', verifier);
+    return {challenge, verifier};
   }
 
   hashMembers(ids) {
     let key = ids.sort().join('');
-    let shaObj = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' })
-    shaObj.update(key);
-    return shaObj.getHash('HEX')
+    let sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' })
+    sha.update(key);
+    return sha.getHash('HEX')
   }
 }
 
-export default Util;
+export default new Utils;
