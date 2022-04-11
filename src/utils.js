@@ -1,8 +1,8 @@
 import forge from 'node-forge';
-import jsSHA from 'jssha';
+import JsSHA from 'jssha';
 
 class Utils {
-  base64RawURLEncode(_buffer) {
+  static base64RawURLEncode(_buffer) {
     let buffer;
     if (_buffer instanceof forge.util.ByteBuffer) {
       buffer = _buffer.bytes();
@@ -17,7 +17,7 @@ class Utils {
     return forge.util.encode64(buffer).replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_');
   }
 
-  base64RawURLDecode(_data) {
+  static base64RawURLDecode(_data) {
     let data = _data.replaceAll('-', '+').replaceAll('_', '/');
     if (data.length % 4 === 2) {
       data += '==';
@@ -26,7 +26,7 @@ class Utils {
     return privateKey;
   }
 
-  environment() {
+  static environment() {
     if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.MixinContext) {
       return 'iOS';
     }
@@ -36,7 +36,7 @@ class Utils {
     return undefined;
   }
 
-  conversationId() {
+  static conversationId() {
     let ctx;
     switch (this.environment()) {
       case 'iOS':
@@ -50,7 +50,7 @@ class Utils {
     }
   }
 
-  fetchChallenge() {
+  static fetchChallenge() {
     const key = forge.random.getBytesSync(32);
     const verifier = this.base64RawURLEncode(key);
 
@@ -61,7 +61,7 @@ class Utils {
     return { challenge, verifier };
   }
 
-  getMixinContext() {
+  static getMixinContext() {
     let ctx = {};
     if (
       window.webkit
@@ -80,19 +80,19 @@ class Utils {
     return ctx;
   }
 
-  generateED25519Keypair() {
+  static generateED25519Keypair() {
     const keypair = forge.pki.ed25519.generateKeyPair();
     const publicKey = this.base64RawURLEncode(keypair.publicKey);
     const privateKey = this.base64RawURLEncode(keypair.privateKey);
     return { publicKey, privateKey };
   }
 
-  hashMembers(ids) {
+  static hashMembers(ids) {
     const key = ids.sort().join('');
-    const sha = new jsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' })
+    const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
     sha.update(key);
     return sha.getHash('HEX');
   }
 }
 
-export default new Utils();
+export default Utils;
