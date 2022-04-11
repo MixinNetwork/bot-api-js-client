@@ -1,4 +1,4 @@
-import User from '../src/user'
+import User from '../src/user';
 
 describe('Tests for user', () => {
   const keystore = {
