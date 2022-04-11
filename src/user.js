@@ -16,7 +16,73 @@ class User {
     this.utils = Utils;
   }
 
-  createUser(fullName, callback) {
+  me(callback) {
+    return this.http.request('GET', '/me').then(
+      (res) => {
+        if (callback) {
+          return callback(res.data);
+        }
+        return res.data;
+      },
+    );
+  }
+
+  fetch(id, callback) {
+    return this.http.request('GET', `/users/${id}`).then(
+      (res) => {
+        if (callback) {
+          return callback(res.data);
+        }
+        return res.data;
+      },
+    );
+  }
+
+  fetchUsers(ids, callback) {
+    return this.http.request('POST', '/users/fetch', ids).then(
+      (res) => {
+        if (callback) {
+          return callback(res.data);
+        }
+        return res.data;
+      },
+    );
+  }
+
+  updateMe(body, callback) {
+    return this.http.request('POST', '/me', body).then(
+      (res) => {
+        if (callback) {
+          return callback(res.data);
+        }
+        return res.data;
+      },
+    );
+  }
+
+  updatePreference(body, callback) {
+    return this.http.request('POST', '/me/preferences', body).then(
+      (res) => {
+        if (callback) {
+          return callback(res.data);
+        }
+        return res.data;
+      },
+    );
+  }
+
+  rotateCode(callback) {
+    return this.http.request('GET', '/me/code').then(
+      (res) => {
+        if (callback) {
+          return callback(res.data);
+        }
+        return res.data;
+      },
+    );
+  }
+
+  createBareUser(fullName, callback) {
     const { publicKey, privateKey } = this.utils.generateED25519Keypair();
     const data = {
       session_secret: publicKey,
@@ -34,17 +100,6 @@ class User {
           return callback(userData);
         }
         return userData;
-      },
-    );
-  }
-
-  me(callback) {
-    return this.http.request('GET', '/me').then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
       },
     );
   }
