@@ -1,6 +1,7 @@
 import forge from 'node-forge';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import serialize from 'serialize-javascript';
 import Utils from './utils';
 
 class HTTP {
@@ -21,7 +22,7 @@ class HTTP {
     const method = _method.toLocaleUpperCase();
     let params;
     if (typeof _params === 'object') {
-      params = JSON.stringify(_params);
+      params = serialize(_params);
     } else if (typeof _params !== 'string') {
       params = '';
     } else {
@@ -42,8 +43,8 @@ class HTTP {
       scp: scp || 'FULL',
     };
 
-    const header = this.utils.base64RawURLEncode(JSON.stringify({ alg: 'EdDSA', typ: 'JWT' }));
-    payload = this.utils.base64RawURLEncode(JSON.stringify(payload));
+    const header = this.utils.base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
+    payload = this.utils.base64RawURLEncode(serialize(payload));
 
     const privateKey = this.utils.base64RawURLDecode(this.privateKey);
     const result = [header, payload];
@@ -58,10 +59,11 @@ class HTTP {
   }
 
   request(method, path, data) {
+    const body = !data ? '' : serialize(data);
     const accessToken = this.signAuthenticationToken(
       method,
       path,
-      JSON.stringify(data),
+      body,
     );
     return this.requestByToken(method, path, data, accessToken);
   }

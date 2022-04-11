@@ -26,7 +26,8 @@
     "int64-buffer": "^1.0.1",
     "jssha": "^3.2.0",
     "node-forge": "^1.2.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "serialize-javascript": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
@@ -41,7 +42,6 @@
     "rollup": "^2.63.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-uglify": "^6.0.4",
-    "serialize-javascript": ">=3.1.0"
+    "rollup-plugin-uglify": "^6.0.4"
   }
 }
