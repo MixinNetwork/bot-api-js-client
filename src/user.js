@@ -16,73 +16,31 @@ class User {
     this.utils = Utils;
   }
 
-  me(callback) {
-    return this.http.request('GET', '/me').then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+  me() {
+    return this.http.request('GET', '/me').then((res) => res.data);
   }
 
-  fetch(id, callback) {
-    return this.http.request('GET', `/users/${id}`).then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+  fetch(id) {
+    return this.http.request('GET', `/users/${id}`).then((res) => res.data);
   }
 
-  fetchUsers(ids, callback) {
-    return this.http.request('POST', '/users/fetch', ids).then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+  fetchUsers(ids) {
+    return this.http.request('POST', '/users/fetch', ids).then((res) => res.data);
   }
 
-  updateMe(body, callback) {
-    return this.http.request('POST', '/me', body).then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+  updateMe(body) {
+    return this.http.request('POST', '/me', body).then((res) => res.data);
   }
 
-  updatePreference(body, callback) {
-    return this.http.request('POST', '/me/preferences', body).then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+  updatePreference(body) {
+    return this.http.request('POST', '/me/preferences', body).then((res) => res.data);
   }
 
-  rotateCode(callback) {
-    return this.http.request('GET', '/me/code').then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+  rotateCode() {
+    return this.http.request('GET', '/me/code').then((res) => res.data);
   }
 
-  createBareUser(fullName, callback) {
+  createBareUser(fullName) {
     const { publicKey, privateKey } = this.utils.generateED25519Keypair();
     const data = {
       session_secret: publicKey,
@@ -96,52 +54,34 @@ class User {
           user,
           privateKey,
         };
-        if (callback) {
-          return callback(userData);
-        }
         return userData;
       },
     );
   }
 
-  setupPin(callback) {
+  setupPin() {
     const encryptedPIN = this.encryptPin();
 
     return this.updatePin(
       '',
       encryptedPIN,
-      callback,
     );
   }
 
-  updatePin(oldEncryptedPin, encryptedPin, callback) {
+  updatePin(oldEncryptedPin, encryptedPin) {
     const data = {
       old_pin: oldEncryptedPin,
       pin: encryptedPin,
     };
-    return this.http.request('POST', '/pin/update', data).then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+    return this.http.request('POST', '/pin/update', data).then((res) => res.data);
   }
 
-  verifyPin(callback) {
+  verifyPin() {
     const encryptedPin = this.signEd25519PIN();
     const data = {
       pin: encryptedPin,
     };
-    return this.http.request('POST', '/pin/verify', data).then(
-      (res) => {
-        if (callback) {
-          return callback(res.data);
-        }
-        return res.data;
-      },
-    );
+    return this.http.request('POST', '/pin/verify', data).then((res) => res.data);
   }
 
   privateKeyToCurve25519(privateKey) {
@@ -201,7 +141,7 @@ class User {
     const paddingLen = blockSize - (buffer.length() % blockSize);
     const padding = forge.util.hexToBytes(paddingLen.toString(16));
 
-    for (let i = 0; i < paddingLen; i++) {
+    for (let i = 0; i < paddingLen; i += 1) {
       buffer.putBytes(padding);
     }
     const iv = forge.random.getBytesSync(16);
