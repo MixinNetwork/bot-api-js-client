@@ -11,10 +11,10 @@ describe('Tests for user', () => {
   const user = new User(keystore);
 
   test('user read me', () => user.me().then((data) => {
-    console.log(data);
+    expect(data.data.user_id).toMatch('7a522ae4-841b-357b-a7b1-4f5f51488b8f');
   }));
 
   test('user verify pin', () => user.verifyPin().then((data) => {
-    console.log(data);
+    expect(data.data.user_id).toMatch('7a522ae4-841b-357b-a7b1-4f5f51488b8f');
   }));
 });
