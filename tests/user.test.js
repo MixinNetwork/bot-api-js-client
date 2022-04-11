@@ -26,7 +26,7 @@ describe('Tests for user', () => {
     expect(data.data.user_id).toMatch(keystore.user_id);
   }));
 
-  // test ok, disabled
+  // test ok, commented for invoiding to create useless user
   // test('create bare user', () => user.createBareUser(`jsclient test ${Date.now()}`).then((data) => {
   //   console.log(data);
   // }));
