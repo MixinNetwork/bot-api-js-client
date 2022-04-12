@@ -22,8 +22,8 @@ class Conversation {
   }
 
   // action: exit, join, mute, rotate
-  DoConversation(id, action) {
-    return this.http.request('POST', `/conversations/${id}/${action}`);
+  DoConversation(id, action, body) {
+    return this.http.request('POST', `/conversations/${id}/${action}`, body);
   }
 
   GetConversation(id) {
