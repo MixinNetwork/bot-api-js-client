@@ -31,7 +31,6 @@ describe('Tests for conversation', () => {
     });
   });
 
-  /*
   test('Test for transfer', () => {
     const body = {
       asset_id: '965e5c6e-434c-3fa9-b780-c50f43cd955c',
@@ -45,7 +44,6 @@ describe('Tests for conversation', () => {
       expect(result.trace_id).toMatch(traceId);
     });
   });
-  */
 
   test('Test for trace transaction', () => {
     transfer.Trace(traceId).then((resp) => {
