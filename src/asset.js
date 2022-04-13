@@ -1,10 +1,8 @@
 import HTTP from './http';
-import Utils from './utils';
 
 class Asset {
   constructor(keystore) {
     this.keystore = keystore || {};
-    this.utils = Utils;
     this.http = new HTTP(this.keystore);
   }
 
