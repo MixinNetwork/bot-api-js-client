@@ -8,13 +8,13 @@ class OAuth {
 
   // List the user's authorizations
   // an optional params "app", which specify the app id
-  // will return an array of authorizations
+  // will return an array of authorizations or the authorization of the app
   Authorizations() {
     return this.http.request('GET', '/authorizations');
   }
 
   // body: { "authorization_id": UUID, scopes: [] }
-  // authorized users authorizations
+  // user can authorize authorizations for the app.
   Authorize(body) {
     return this.http.request('POST', '/oauth/authorize', body);
   }
