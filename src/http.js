@@ -73,13 +73,17 @@ class HTTP {
   }
 
   requestByToken(method, path, data, accessToken) {
+    let token = '';
+    if (accessToken) {
+      token = accessToken;
+    }
     return axios({
       method,
       url: this.host + path,
       data,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   }
