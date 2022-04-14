@@ -5,15 +5,10 @@ class Code {
     this.http = new HTTP();
   }
 
-  // User can get some private information by code id.
-  // Code id can be changed by author.
+  // Code is using to share some private information for others.
+  // The code can be modified by author.
   // Support category:
-  // users
-  // conversations
-  // authorizations
-  // multisigs
-  // collectibles
-  // payments
+  // users, conversations, authorizations, multisigs, collectibles, payments
   Show(id) {
     return this.http.requestByToken('GET', `/codes/${id}`);
   }
