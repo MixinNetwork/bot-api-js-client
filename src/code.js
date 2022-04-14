@@ -5,7 +5,7 @@ class Code {
     this.http = new HTTP();
   }
 
-  // Code is using to share some private information for others.
+  // This api use to share some private informations for others.
   // The code can be modified by author.
   // Support category:
   // users, conversations, authorizations, multisigs, collectibles, payments
