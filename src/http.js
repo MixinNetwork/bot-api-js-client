@@ -10,6 +10,7 @@ class HTTP {
     this.uid = keystore.user_id;
     this.sid = keystore.session_id;
     this.privateKey = keystore.private_key;
+    this.accessToken = keystore.access_token;
     this.host = keystore.host || 'https://mixin-api.zeromesh.net';
     this.utils = Utils;
   }
@@ -59,6 +60,9 @@ class HTTP {
   }
 
   request(method, path, data) {
+    if (this.accessToken) {
+      return this.requestByToken(method, path, data, this.accessToken);
+    }
     const body = !data ? '' : serialize(data);
     const accessToken = this.signAuthenticationToken(
       method,
@@ -69,13 +73,17 @@ class HTTP {
   }
 
   requestByToken(method, path, data, accessToken) {
+    let token = '';
+    if (accessToken) {
+      token = accessToken;
+    }
     return axios({
       method,
       url: this.host + path,
       data,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   }
