@@ -6,9 +6,11 @@
     "Mixin",
     "Mixin Network"
   ],
-  "main": "lib/mixin.js",
+  "main": "src/mixin.js",
+  "type": "module",
   "repository": "git+https://github.com/MixinNetwork/bot-api-js-client.git",
   "scripts": {
+    "build": "webpack",
     "test": "jest"
   },
   "babel": {
