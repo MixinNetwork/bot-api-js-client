@@ -2,7 +2,7 @@ import forge from 'node-forge';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import serialize from 'serialize-javascript';
-import Utils from './utils';
+import Utils from './utils.js';
 
 class HTTP {
   constructor(_keystore) {

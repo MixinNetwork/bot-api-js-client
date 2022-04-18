@@ -1,5 +1,5 @@
-import HTTP from './http';
-import Utils from './utils';
+import HTTP from './http.js';
+import Utils from './utils.js';
 
 class Conversation {
   constructor(keystore) {

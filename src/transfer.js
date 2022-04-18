@@ -1,5 +1,5 @@
-import HTTP from './http';
-import User from './user';
+import HTTP from './http.js';
+import User from './user.js';
 
 class Transfer {
   constructor(keystore) {
