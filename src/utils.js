@@ -1,5 +1,6 @@
 import forge from 'node-forge';
 import JsSHA from 'jssha';
+import { sharedKey } from 'curve25519-js';
 
 class Utils {
   static base64RawURLEncode(_buffer) {
@@ -92,6 +93,35 @@ class Utils {
     const sha = new JsSHA('SHA3-256', 'TEXT', { encoding: 'UTF8' });
     sha.update(key);
     return sha.getHash('HEX');
+  }
+
+  static hexToBytes(hex) {
+    const bytes = [];
+    for (let c = 0; c < hex.length; c += 2) {
+      bytes.push(parseInt(hex.substr(c, 2), 16));
+    }
+    return bytes;
+  }
+
+  static privateKeyToCurve25519(privateKey) {
+    const seed = privateKey.subarray(0, 32);
+    const md = forge.md.sha512.create();
+    md.update(seed.toString('binary'));
+    const digestx = md.digest();
+    const digest = Buffer.from(digestx.getBytes(), 'binary');
+
+    digest[0] &= 248;
+    digest[31] &= 127;
+    digest[31] |= 64;
+    return digest.subarray(0, 32);
+  }
+
+  static sharedEd25519Key(_pinToken, _privateKey) {
+    const pinToken = Buffer.from(_pinToken, 'base64');
+    let privateKey = Buffer.from(_privateKey, 'base64');
+    privateKey = this.privateKeyToCurve25519(privateKey);
+
+    return sharedKey(privateKey, pinToken);
   }
 }
 

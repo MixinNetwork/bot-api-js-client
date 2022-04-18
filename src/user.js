@@ -1,6 +1,5 @@
 import forge from 'node-forge';
 import LittleEndian from 'int64-buffer';
-import { sharedKey } from 'curve25519-js';
 import HTTP from './http';
 import Utils from './utils';
 
@@ -84,45 +83,17 @@ class User {
     return this.http.request('POST', '/pin/verify', data).then((res) => res.data);
   }
 
-  privateKeyToCurve25519(privateKey) {
-    const seed = privateKey.subarray(0, 32);
-    const md = forge.md.sha512.create();
-    md.update(seed.toString('binary'));
-    const digestx = md.digest();
-    const digest = Buffer.from(digestx.getBytes(), 'binary');
-
-    digest[0] &= 248;
-    digest[31] &= 127;
-    digest[31] |= 64;
-    return digest.subarray(0, 32);
-  }
-
-  sharedEd25519Key(_pinToken, _privateKey) {
-    const pinToken = Buffer.from(_pinToken, 'base64');
-    let privateKey = Buffer.from(_privateKey, 'base64');
-    privateKey = this.privateKeyToCurve25519(privateKey);
-
-    return sharedKey(privateKey, pinToken);
-  }
-
-  hexToBytes(hex) {
-    const bytes = [];
-    for (let c = 0; c < hex.length; c += 2) {
-      bytes.push(parseInt(hex.substr(c, 2), 16));
-    }
-    return bytes;
-  }
-
   signEd25519PIN(_iterator) {
     const blockSize = 16;
     let Uint64;
 
     try {
       if (LittleEndian) Uint64 = LittleEndian.Int64LE;
-      if (Uint64BE) Uint64 = Uint64LE;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
 
-    const sharedkey = this.sharedEd25519Key(this.pinToken, this.privateKey);
+    const sharedkey = this.utils.sharedEd25519Key(this.pinToken, this.privateKey);
 
     let iteratorTmp = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer);
     iteratorTmp = forge.util.createBuffer(iteratorTmp);
@@ -145,7 +116,7 @@ class User {
       buffer.putBytes(padding);
     }
     const iv = forge.random.getBytesSync(16);
-    const key = this.hexToBytes(forge.util.binary.hex.encode(sharedkey));
+    const key = this.utils.hexToBytes(forge.util.binary.hex.encode(sharedkey));
     const cipher = forge.cipher.createCipher('AES-CBC', key);
 
     cipher.start({
