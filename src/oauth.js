@@ -1,4 +1,4 @@
-import HTTP from './http';
+import HTTP from './http.js';
 
 class OAuth {
   constructor(keystore) {

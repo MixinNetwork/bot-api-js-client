@@ -1,7 +1,7 @@
 import forge from 'node-forge';
 import LittleEndian from 'int64-buffer';
-import HTTP from './http';
-import Utils from './utils';
+import HTTP from './http.js';
+import Utils from './utils.js';
 
 class User {
   constructor(_keystore) {
