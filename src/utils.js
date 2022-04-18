@@ -23,7 +23,7 @@ class Utils {
     if (data.length % 4 === 2) {
       data += '==';
     }
-    const privateKey = forge.util.decode64(data);
+    const privateKey = forge.util.binary.base64.decode(data);
     return privateKey;
   }
 
