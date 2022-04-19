@@ -129,8 +129,8 @@ class User {
     pinBuff.putBytes(iv);
     pinBuff.putBytes(cipher.output.getBytes());
 
-    const encryptedBytes = pinBuff.getBytes();
-    return forge.util.encode64(encryptedBytes);
+    const encryptedBytes = Buffer.from(pinBuff.getBytes(), 'binary');
+    return forge.util.binary.base64.encode(encryptedBytes);
   }
 }
 

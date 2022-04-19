@@ -6,16 +6,16 @@ class Utils {
   static base64RawURLEncode(_buffer) {
     let buffer;
     if (_buffer instanceof forge.util.ByteBuffer) {
-      buffer = _buffer.bytes();
+      buffer = Buffer.from(_buffer.bytes(), 'binary');
     } else if (_buffer instanceof Buffer) {
-      buffer = forge.util.createBuffer(_buffer.toString('binary')).bytes();
-    } else {
       buffer = _buffer;
+    } else {
+      buffer = Buffer.from(forge.util.createBuffer(_buffer).bytes());
     }
     if (!buffer) {
       return '';
     }
-    return forge.util.encode64(buffer).replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_');
+    return forge.util.binary.base64.encode(buffer).replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_');
   }
 
   static base64RawURLDecode(_data) {
