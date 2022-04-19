@@ -14,7 +14,7 @@ class Mixin {
     this.app = new APP(keystore);
     this.code = new Code(keystore);
     this.conversation = new Conversation(keystore);
-    this.OAuth = new OAuth(keystore);
+    this.oauth = new OAuth(keystore);
     this.transfer = new Transfer(keystore);
     this.user = new User(keystore);
     this.http = new HTTP(keystore);
