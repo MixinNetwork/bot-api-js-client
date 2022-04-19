@@ -2,15 +2,11 @@ import forge from 'node-forge';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import serialize from 'serialize-javascript';
-import Utils from './utils.js';
+import Utils from './utils';
 
 class HTTP {
-  constructor(_keystore) {
-    const keystore = _keystore || {};
-    this.uid = keystore.user_id;
-    this.sid = keystore.session_id;
-    this.privateKey = keystore.private_key;
-    this.accessToken = keystore.access_token;
+  constructor(keystore) {
+    this.keystore = keystore || {};
     this.host = keystore.host || 'https://mixin-api.zeromesh.net';
     this.utils = Utils;
   }
@@ -35,8 +31,8 @@ class HTTP {
     const md = forge.md.sha256.create();
     md.update(method + uri + params, 'utf8');
     let payload = {
-      uid: this.uid,
-      sid: this.sid,
+      uid: this.keystore.user_id,
+      sid: this.keystore.session_id,
       iat,
       exp,
       jti: uuidv4(),
@@ -47,7 +43,7 @@ class HTTP {
     const header = this.utils.base64RawURLEncode(serialize({ alg: 'EdDSA', typ: 'JWT' }));
     payload = this.utils.base64RawURLEncode(serialize(payload));
 
-    const privateKey = this.utils.base64RawURLDecode(this.privateKey);
+    const privateKey = this.utils.base64RawURLDecode(this.keystore.private_key);
     const result = [header, payload];
     const signData = forge.pki.ed25519.sign({
       message: result.join('.'),
@@ -60,8 +56,8 @@ class HTTP {
   }
 
   request(method, path, data) {
-    if (this.accessToken) {
-      return this.requestByToken(method, path, data, this.accessToken);
+    if (this.keystore.access_token) {
+      return this.requestByToken(method, path, data, this.keystore.access_token);
     }
     const body = !data ? '' : serialize(data);
     const accessToken = this.signAuthenticationToken(

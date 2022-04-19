@@ -1,17 +1,12 @@
 import forge from 'node-forge';
 import LittleEndian from 'int64-buffer';
-import HTTP from './http.js';
-import Utils from './utils.js';
+import HTTP from './http';
+import Utils from './utils';
 
 class User {
-  constructor(_keystore) {
-    const keystore = _keystore || {};
-    this.uid = keystore.user_id;
-    this.sid = keystore.session_id;
-    this.privateKey = keystore.private_key;
-    this.pin = keystore.pin;
-    this.pinToken = keystore.pin_token;
-    this.http = new HTTP(keystore);
+  constructor(keystore) {
+    this.keystore = keystore || {};
+    this.http = new HTTP(this.keystore);
     this.utils = Utils;
   }
 
@@ -93,7 +88,7 @@ class User {
       console.log(error);
     }
 
-    const sharedkey = this.utils.sharedEd25519Key(this.pinToken, this.privateKey);
+    const sharedkey = this.utils.sharedEd25519Key(this.keystore.pin_token, this.keystore.private_key);
 
     let iteratorTmp = new Uint8Array(new Uint64(Math.floor((new Date()).getTime() / 1000)).buffer);
     iteratorTmp = forge.util.createBuffer(iteratorTmp);
@@ -103,14 +98,14 @@ class User {
     time = forge.util.createBuffer(time);
     time = time.getBytes();
 
-    const pinByte = forge.util.createBuffer(this.pin, 'utf8');
+    const pinByte = forge.util.createBuffer(this.keystore.pin, 'utf8');
 
     const buffer = forge.util.createBuffer();
     buffer.putBytes(pinByte);
     buffer.putBytes(time);
     buffer.putBytes(iterator);
     const paddingLen = blockSize - (buffer.length() % blockSize);
-    const padding = forge.util.hexToBytes(paddingLen.toString(16));
+    const padding = forge.util.binary.hex.decode(paddingLen.toString(16));
 
     for (let i = 0; i < paddingLen; i += 1) {
       buffer.putBytes(padding);
@@ -129,8 +124,8 @@ class User {
     pinBuff.putBytes(iv);
     pinBuff.putBytes(cipher.output.getBytes());
 
-    const encryptedBytes = pinBuff.getBytes();
-    return forge.util.encode64(encryptedBytes);
+    const encryptedBytes = Buffer.from(pinBuff.getBytes(), 'binary');
+    return forge.util.binary.base64.encode(encryptedBytes);
   }
 }
 
