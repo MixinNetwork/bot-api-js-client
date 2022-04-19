@@ -9,7 +9,7 @@ describe('Tests for utils', () => {
     let decode = forge.util.decode64('YmFzZTY0UmF3VVJMRW5jb2RlIHNob3VsZCBiZSB1cmwgc2FmZS4');
     expect(decode).toMatch('base64RawURLEncode should be url safe.');
     decode = Utils.base64RawURLDecode('UVXRC3f4sWyFMFq2BmutrYWskXJFy6vmkXY_61weQ1VQl_H_oUba4BRh9nDv8BwlovfqmytE6Q8GEaPgEc09YQ');
-    expect(forge.util.encode64(decode)).toMatch('UVXRC3f4sWyFMFq2BmutrYWskXJFy6vmkXY/61weQ1VQl/H/oUba4BRh9nDv8BwlovfqmytE6Q8GEaPgEc09YQ==');
+    expect(forge.util.binary.base64.encode(decode)).toMatch('UVXRC3f4sWyFMFq2BmutrYWskXJFy6vmkXY/61weQ1VQl/H/oUba4BRh9nDv8BwlovfqmytE6Q8GEaPgEc09YQ==');
   });
 
   test('challenge should return two url safe string', () => {
