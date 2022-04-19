@@ -110,7 +110,7 @@ class User {
     buffer.putBytes(time);
     buffer.putBytes(iterator);
     const paddingLen = blockSize - (buffer.length() % blockSize);
-    const padding = forge.util.hexToBytes(paddingLen.toString(16));
+    const padding = forge.util.binary.hex.decode(paddingLen.toString(16));
 
     for (let i = 0; i < paddingLen; i += 1) {
       buffer.putBytes(padding);
