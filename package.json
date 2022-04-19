@@ -6,7 +6,8 @@
     "Mixin",
     "Mixin Network"
   ],
-  "main": "src/mixin.js",
+  "main": "mixin.js",
+  "types": "mixin.d.ts",
   "type": "module",
   "repository": "git+https://github.com/MixinNetwork/bot-api-js-client.git",
   "scripts": {

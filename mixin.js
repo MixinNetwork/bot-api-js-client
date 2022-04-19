@@ -1,12 +1,12 @@
-import Asset from './asset.js';
-import APP from './app.js';
-import Code from './code.js';
-import Conversation from './conversation.js';
-import OAuth from './oauth.js';
-import Transfer from './transfer.js';
-import User from './user.js';
-import HTTP from './http.js';
-import Utils from './utils.js';
+import Asset from './src/asset.js';
+import APP from './src/app.js';
+import Code from './src/code.js';
+import Conversation from './src/conversation.js';
+import OAuth from './src/oauth.js';
+import Transfer from './src/transfer.js';
+import User from './src/user.js';
+import HTTP from './src/http.js';
+import Utils from './src/utils.js';
 
 class Mixin {
   constructor(keystore) {

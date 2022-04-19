@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "es2015",
+    "lib": ["dom", "es2015"],
+    "types": [],
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "bot-api-js-client": ["."]
+    }
+  }
+}
