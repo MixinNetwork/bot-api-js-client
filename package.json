@@ -10,13 +10,8 @@
   "types": "mixin.d.ts",
   "repository": "git+https://github.com/MixinNetwork/bot-api-js-client.git",
   "scripts": {
-    "build": "webpack",
+    "build": "babel src -d dist",
     "test": "jest"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
   },
   "author": "jadeydi",
   "license": "ISC",
@@ -32,8 +27,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.7",
-    "@babel/preset-env": "^7.16.8",
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
