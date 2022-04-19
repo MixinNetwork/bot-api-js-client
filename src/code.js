@@ -1,4 +1,4 @@
-import HTTP from './http.js';
+import HTTP from './http';
 
 class Code {
   constructor() {
