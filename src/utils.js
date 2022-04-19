@@ -15,7 +15,7 @@ class Utils {
     if (!buffer) {
       return '';
     }
-    return forge.util.encode64(buffer).replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_');
+    return forge.util.binary.base64.encode(buffer).replaceAll('=', '').replaceAll('+', '-').replaceAll('/', '_');
   }
 
   static base64RawURLDecode(_data) {

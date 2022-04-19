@@ -9,7 +9,7 @@ export interface Keystore {
 }
 
 class Mixin {
-  constructor(keystore: Keystore);
+  constructor(keystore?: Keystore);
 }
 
 export default Mixin;
