@@ -5,6 +5,7 @@ import Conversation from './conversation';
 import OAuth from './oauth';
 import Transfer from './transfer';
 import User from './user';
+import Snapshot from './snapshot';
 import HTTP from './http';
 import Utils from './utils';
 
@@ -18,6 +19,7 @@ class Mixin {
     this.transfer = new Transfer(keystore);
     this.user = new User(keystore);
     this.http = new HTTP(keystore);
+    this.snapshot = new Snapshot(keystore);
     this.utils = Utils;
   }
 }
