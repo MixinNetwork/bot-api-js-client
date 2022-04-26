@@ -1,4 +1,4 @@
-import Transfer from '../src/transfer';
+import Transfer from '../../src/mixin/transfer';
 import keystore from './keystore';
 
 describe('Tests for conversation', () => {

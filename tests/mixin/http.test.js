@@ -1,4 +1,4 @@
-import HTTP from '../src/http';
+import HTTP from '../../src/mixin/http';
 
 describe('Tests for utils', () => {
   const keystore = {

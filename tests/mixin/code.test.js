@@ -1,4 +1,4 @@
-import Code from '../src/code';
+import Code from '../../src/mixin/code';
 
 describe('Tests for code', () => {
   const code = new Code();

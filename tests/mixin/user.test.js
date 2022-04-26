@@ -1,4 +1,4 @@
-import User from '../src/user';
+import User from '../../src/mixin/user';
 import keystore from './keystore';
 
 describe('Tests for user', () => {

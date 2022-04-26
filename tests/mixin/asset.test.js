@@ -1,4 +1,4 @@
-import Asset from '../src/asset';
+import Asset from '../../src/mixin/asset';
 import keystore from './keystore';
 
 describe('Tests for asset', () => {

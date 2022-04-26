@@ -1,13 +1,13 @@
-import Asset from './asset';
-import APP from './app';
-import Code from './code';
-import Conversation from './conversation';
-import OAuth from './oauth';
-import Transfer from './transfer';
-import User from './user';
-import Snapshot from './snapshot';
-import HTTP from './http';
-import Utils from './utils';
+import Asset from './mixin/asset';
+import APP from './mixin/app';
+import Code from './mixin/code';
+import Conversation from './mixin/conversation';
+import OAuth from './mixin/oauth';
+import Transfer from './mixin/transfer';
+import User from './mixin/user';
+import Snapshot from './mixin/snapshot';
+import HTTP from './mixin/http';
+import Utils from './mixin/utils';
 
 class Mixin {
   constructor(keystore) {

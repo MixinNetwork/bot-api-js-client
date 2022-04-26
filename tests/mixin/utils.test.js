@@ -1,5 +1,5 @@
 import forge from 'node-forge';
-import Utils from '../src/utils';
+import Utils from '../../src/mixin/utils';
 
 describe('Tests for utils', () => {
   test('base64RawURLEncode should be url safe', () => {

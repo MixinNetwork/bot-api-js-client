@@ -1,4 +1,4 @@
-import Conversation from '../src/conversation';
+import Conversation from '../../src/mixin/conversation';
 import keystore from './keystore';
 
 describe('Tests for conversation', () => {
