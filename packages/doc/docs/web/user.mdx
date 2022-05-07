@@ -32,6 +32,7 @@ const scope = {
 }
 
 const params = {
+  scope, // 默认 profile:true
   client_id: 'uuid', // 指定授权的机器人 client_id
   return_to: '/', // 用户授权完了之后的回调页面路由() 
   state: '', // 回调页面会携带这个参数
@@ -42,7 +43,7 @@ Mixin.toAuthPage(params)
 ```
 :::tip提示
 1. `return_to` 和 `state` 会在回调页面的 url 中返回。
-2. 回调页面会在 url 中返回 `code` ，可以传给后端，用于 token 的获取。
+2. 回调页面会在 url 中返回 `code` ，可以传给后端，用于 token 的获取。[点击这里查看服务端代码](/docs/server/client/user#1-用户授权登陆)
 :::
 
 ### 3. 获取用户的资产

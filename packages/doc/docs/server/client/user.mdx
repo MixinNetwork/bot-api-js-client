@@ -1,8 +1,11 @@
 ---
 sidebar_position: 2
 ---
-
 # 用户
+:::tip提示
+1. 本篇文档均需要获取到 `client` 对象，请在 `client` 对象初始化后再进行操作。[请点击这里查看文档](/docs/server/client/prev)
+2. 本篇文档有视频教程，[请点击这里查看](https://developers.mixinbots.com/courses/1e276ee9-18fb-42e3-915a-54b049679084/89329795-c5a2-4aa5-ab32-c52cf6649910)
+:::
 
 ### 1. 用户授权登陆
 ```js
@@ -17,9 +20,160 @@ client.authorizeToken(code)
 ```
 
 :::tip提示
-1. 这里的 code 获取，需要客户端完成授权操作。 [点击这里](/docs/web/user#2-获取授权的-code) 查看客户端端代码。
+1. 这里的 code 获取，需要客户端完成授权操作。 [点击这里查看客户端端代码](/docs/web/user#2-获取授权的-code) 。
 2. 如果初始化 `client` 的时候，携带了 `client_secret`，就只需要传入 `code` 参数即可。
 3. 如果没有，则需要传入第二个参数 `client_secret`。
+4. 获取到的 `access_token` 可以访问对应 `scope` 的接口。[具体内容请查看这里](/docs/server/userWithToken)
 :::
 
+### 2. 获取用户信息
+```js
+client.useMe()
+```
+返回值
+```json
+{
+  "type": "user",
+  "user_id": "d419d2b0-5c20-4dd7-9a5c-177375c249b8",
+  "identity_number": "7000104117",
+  "phone": "d419d2b0-5c20-4dd7-9a5c-177375c249b8",
+  "full_name": "node-sdk-test123",
+  "biography": "https://mixin.one/authhttps://mixin.one/authhttps://mixin.one/auth",
+  "avatar_url": "",
+  "relationship": "ME",
+  "mute_until": "0001-01-01T00:00:00Z",
+  "created_at": "2021-08-25T07:18:48.207247252Z",
+  "is_verified": false,
+  "is_scam": false,
+  "app": {
+    "type": "app",
+    "app_id": "d419d2b0-5c20-4dd7-9a5c-177375c249b8",
+    "app_number": "7000104117",
+    "redirect_uri": "https://mixin.one/auth",
+    "home_uri": "https://mixin.one",
+    "name": "node-sdk-test",
+    "icon_url": "",
+    "description": "https://mixin.one/authhttps://mixin.one/authhttps://mixin.one/auth",
+    "capabilities": [
+      "CONTACT",
+      "GROUP"
+    ],
+    "resource_patterns": [
+      "https://mixin.one/"
+    ],
+    "category": "OTHER",
+    "creator_id": "105f6e8b-d249-4b4d-9beb-e03cefaebc37",
+    "updated_at": "2021-08-27T01:47:18.941742117Z",
+    "app_secret": "",
+    "capabilites": [
+      "CONTACT",
+      "GROUP"
+    ]
+  },
+  "session_id": "7412bbcd-218d-43f6-a9a7-46e10ff0021a",
+  "pin_token": "",
+  "pin_token_base64": "",
+  "code_id": "4a4049bb-2733-4751-bbff-46f90a51f204",
+  "code_url": "https://mixin.one/codes/4a4049bb-2733-4751-bbff-46f90a51f204",
+  "device_status": "",
+  "has_pin": true,
+  "has_emergency_contact": false,
+  "receive_message_source": "EVERYBODY",
+  "accept_conversation_source": "EVERYBODY",
+  "accept_search_source": "EVERYBODY",
+  "fiat_currency": "USD",
+  "transfer_notification_threshold": 0,
+  "transfer_confirmation_threshold": 100
+}
+```
+:::tip提示
+1. 如果是机器人调用，则会返回 `app` 字段。否则没有
+2. 如果是机器人调用，`phone` 字段和 `user_id` 一样
+:::
 
+### 3. 获取多个用户信息
+```js
+client.readUsers(['e8e8cd79-cd40-4796-8c54-3a13cfe50115'])
+```
+返回值
+```json
+[
+  {
+    "type": "user",
+    "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+    "identity_number": "30265",
+    "phone": "",
+    "full_name": "刘泽美",
+    "biography": "欢迎交流 Mixin 机器人开发问题。",
+    "avatar_url": "https://mixin-images.zeromesh.net/OsaSpGZMBV4PmQ2Om-UnDZ-878Bk37heqprakp_Sll6MWM-ciLdUQrvEDIeSF4z3t0sgfXt8Hw4zmDkiR2irag0=s256",
+    "relationship": "STRANGER",
+    "mute_until": "2020-08-27T10:11:57.481232553Z",
+    "created_at": "2017-11-27T05:10:36.311323157Z",
+    "is_verified": false,
+    "is_scam": false
+  }
+]
+```
+:::tip提示
+注意这里只能用 `user_id` 来查询。
+:::
+
+### 4. 根据 `user_id` 或 `identity_number` 获取单个用户信息
+```js
+client.readUser('30265')
+client.readUser('e8e8cd79-cd40-4796-8c54-3a13cfe50115')
+```
+返回值
+```json
+{
+  "type": "user",
+  "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+  "identity_number": "30265",
+  "phone": "",
+  "full_name": "刘泽美",
+  "biography": "欢迎交流 Mixin 机器人开发问题。",
+  "avatar_url": "https://mixin-images.zeromesh.net/OsaSpGZMBV4PmQ2Om-UnDZ-878Bk37heqprakp_Sll6MWM-ciLdUQrvEDIeSF4z3t0sgfXt8Hw4zmDkiR2irag0=s256",
+  "relationship": "STRANGER",
+  "mute_until": "2020-08-27T10:11:57.481232553Z",
+  "created_at": "2017-11-27T05:10:36.311323157Z",
+  "is_verified": false,
+  "is_scam": false
+}
+```
+:::tip提示
+1. 用 `identity_number` 查询的时候，有访问频率限制。**频繁请求**会被服务器拒绝。
+2. 用 `user_id` 查询没有频率限制。
+:::
+
+### 5. 根据 `identity_number` 或 `phone` 获取单个用户信息
+```js
+client.searchUser('30265')
+client.searchUser('+8617718523520')
+```
+返回值
+```json
+{
+  "type": "user",
+  "user_id": "e8e8cd79-cd40-4796-8c54-3a13cfe50115",
+  "identity_number": "30265",
+  "phone": "",
+  "full_name": "刘泽美",
+  "biography": "欢迎交流 Mixin 机器人开发问题。",
+  "avatar_url": "https://mixin-images.zeromesh.net/OsaSpGZMBV4PmQ2Om-UnDZ-878Bk37heqprakp_Sll6MWM-ciLdUQrvEDIeSF4z3t0sgfXt8Hw4zmDkiR2irag0=s256",
+  "relationship": "STRANGER",
+  "mute_until": "2020-08-27T10:11:57.481232553Z",
+  "created_at": "2017-11-27T05:10:36.311323157Z",
+  "is_verified": false,
+  "is_scam": false
+}
+```
+:::tip提示
+此接口有访问频率限制。**频繁请求**会被服务器拒绝。
+:::
+
+### 6. 获取联系人
+```js
+```
+返回值
+```json
+```

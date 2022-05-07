@@ -1,0 +1,171 @@
+---
+sidebar_position: 13
+---
+
+# mvm
+
+:::tip 提示
+
+1. [更多 mvm 开发的相关文档请点击](https://mvm.dev/zh/reference/intro.html)
+
+:::
+
+:::danger 警告
+
+此页面的 api 建议版本: [`>=3.0.27`](https://www.npmjs.com/package/mixin-node-sdk)
+
+:::
+
+## 概述
+
+mvm 相关的方法整体的思路是:
+
+### 1. 构建 **extra**
+
+1. 可以根据 合约地址 + 合约 abi + 参数列表 来构建
+2. 可以根据 合约地址 + 合约方法名 + 参数类型 + 参数列表 来构建
+
+### 2. 构建 **payment** 或 **transactionInput**
+
+通过 extra 就可以构建 payment 或者 transactionInput
+
+1. 如果构建 payment , 则获取的 `code_id`, 然后通过 Mixin Messenger 的 `mixin://codes/:code_id` 来支付, 发起合约调用.
+2. 如果构建 transactionInput, 则可以直接通过 `client.transaction(transactionInput)` 方法直接使用机器人支付, 发起合约调用.
+3. 确保有足够的资金来完成支付, 如果不指定资产和数量, 默认是 **0.00000001CNB** 支付
+
+## 1. 类型介绍
+
+### 合约构建参数: **ContractParams**
+
+```ts
+interface ContractParams {
+  contractAddress: string // 合约地址
+  methodName?: string // 方法名
+  types?: string[] // 参数类型
+  values?: any[] // 参数值
+  methodID?: string // 方法ID
+}
+```
+
+> `methodID` 和 `methodName` 二者必填一个
+
+### extra 构建参数: **ExtraGenerateParams**
+
+```ts
+interface ExtraGenerateParams extends ContractParams {
+  options: {
+    delegatecall?: boolean // 使用 delegatecall
+    process?: string // registry 进程
+    address?: string // registry 地址
+    uploadkey?: string // 上传密钥
+
+    ignoreUpload?: boolean // 忽略上传
+  }
+}
+```
+
+> 1. 现在是测试版, 暂时没有上传密钥的限制, 可以随意填写, 如 `123`
+> 2. 其他参数如果看不明白, 可以先不管. 用默认的即可.
+
+### 支付构建参数 **PaymentGenerate**
+
+```ts
+export interface PaymentGenerateParams extends ExtraGenerateParams {
+  extra?: string
+  // 可以不填 payment, 则全部是采用以下默认值
+  payment?: {
+    asset?: string // 默认是 CNB
+    amount?: string // 默认是 0.00000001
+    trace?: string // 默认随机 UUID
+    type?: 'payment' | 'tx' // payment or tx, 默认是 payment
+  }
+}
+```
+
+> 1. 如果合约方法不涉及到资产相关, 可以不填写 `payment` 字段.
+> 2. 如果想获取 `code_id` 来通过 messager 来调用合约方法. type = 'payment' 或者不填默认的也是 payment.
+> 3. 如果想获取 `transactionInput` 来通过 机器人直接调用合约方法. type = 'tx'
+
+### 支付构建参数(补充) **getMvmTransaction**
+
+```ts
+export interface InvokeCodeParams {
+  asset: string // 资产id 必填
+  amount: string // 数量 必填
+  extra: string // 通过上述参数构建的 extra 字段
+  trace: string // trace_id 必填
+  process?: string // registry 进程名称, 可选
+}
+```
+
+## 2. 方法介绍
+
+### 1. 获取 extra
+
+获取 extra 有两个方法
+
+1. `extraGenerateByInfo(params: ExtraGenerateParams): Promise<string>`
+
+代码示例:
+
+```js
+const { extraGenerateByInfo } = require('mixin-node-sdk')
+const extra = extraGenerateByInfo({
+  contractAddress: '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
+  methodName: 'addAny', // 要调用的合约方法
+  types: ['uint256'], // 参数类型列表
+  values: [2], // 参数值列表
+})
+```
+
+2. `abiParamsGenerator(contractAddress: string, abi: JsonFragment[]): { [method: string]: Function }`
+
+代码示例:
+
+```js
+const { abiParamsGenerator } = require('mixin-node-sdk')
+const paramsGenerator = abiParamsGenerator(
+  '0x4f31E2eAF25DCDD46651AcE019B61E3E750023E0', // 要调用的合约地址
+  abi, // 合约的 abi
+)
+// 直接用 paramsGenerator 调用合约方法然后传参就可以了
+const extra = paramsGenerator.addAny(2)
+```
+
+### 2. 获取 payment
+
+获取 payment 有两种方式
+
+1. `paymentGenerateByInfo(params: PaymentGenerateParams): Promise<Payment | TransactionInput>`
+
+代码示例: 获取 `mixin messager` 支付的调用链接
+
+```js
+const { paymentGenerateByInfo } = require('mixin-node-sdk')
+const payment = await paymentGenerateByInfo({
+  contractAddress: '0x4883Ae7CB5c3Cf9219Aeb02d010F2F6Ef353C40c',
+  methodName: 'addAny',
+  types: ['uint256'],
+  values: ['2'],
+})
+console.log(`mixin://codes/${payment.code_id}`)
+```
+
+2. `getMvmTransaction(params: InvokeCodeParams): TransactionInput`
+
+### 3. 获取 transactionInput
+
+代码示例: 直接构建一次合约调用
+
+```js
+const { paymentGenerateByInfo } = require('mixin-node-sdk')
+const txInput = await paymentGenerateByInfo({
+  contractAddress: '0x4883Ae7CB5c3Cf9219Aeb02d010F2F6Ef353C40c',
+  methodName: 'addAny',
+  types: ['uint256'],
+  values: ['2'],
+  payment: { type: 'tx' },
+})
+const tx = await client.transaction(txInput)
+console.log(tx)
+```
