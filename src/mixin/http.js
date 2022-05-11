@@ -7,7 +7,7 @@ import Utils from './utils';
 class HTTP {
   constructor(keystore) {
     this.keystore = keystore || {};
-    this.host = keystore.host || 'https://mixin-api.zeromesh.net';
+    this.host = keystore || 'https://mixin-api.zeromesh.net';
     this.utils = Utils;
   }
 
