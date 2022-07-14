@@ -1,3 +1,5 @@
+**DEPRECATED**: Please use https://github.com/MixinNetwork/bot-api-nodejs-client
+
 # JS SDK for Mixin Network
 
 This is a beta version of JS SDK for Mixin Network, only ed25519 are supported.
